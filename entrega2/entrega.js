@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = './productos.json' //esta variable podria estar oculta!!!!!!!!!!!!!!
-class ProductManager { //genero la clase pero deberia poder optimizarla para que no sea solo para este codigo y un poco mas genereica
+export default class ProductManager { //genero la clase pero deberia poder optimizarla para que no sea solo para este codigo y un poco mas genereica
     constructor(path) {
         this.path = path
         this.products = [] //se instancia el array de productos vacios
@@ -25,7 +25,120 @@ class ProductManager { //genero la clase pero deberia poder optimizarla para que
         }
     }
 
-    /* addProduct = (newItem) => {
+    consultarProducto = async () => {
+
+        if (fs.existsSync(path)) {
+            const data = await fs.promises.readFile(path, 'utf-8')
+            console.log(data)
+            const producto = JSON.parse(data)
+            return producto
+        }
+        else {
+            return this.products
+        }
+    }
+    eliminarProduct(id) {
+        let data = fs.readFileSync(this.path, 'utf-8') //lectura de la ruta que paso en la class
+
+        let dataJS = JSON.parse(data)
+
+        dataJS.splice((id - 1), 1)
+
+        let contador = 1
+
+        dataJS.forEach(product => {  // recorro productos para en contrar el id
+            product.id = contador++
+        })
+
+        fs.writeFileSync(this.path, `${JSON.stringify(dataJS, null, 2)}`, 'utf-8') //mando null para sacar
+    }
+
+
+    updateProduct = async (id, update) => {
+        const data = await fs.promises.readFile(this.path, 'utf-8')
+        const productDb = await JSON.parse(data)
+        const index = await productDb.findIndex(product => product.id === id)
+        if (index === -1) {
+            return console.log(`No existe producto con el id: ${id}`)
+        }
+        productDb[index] = { ...update, id: productDb[index].id }
+        fs.promises.writeFile(this.path, JSON.stringify(productDb, null, '\t'))
+        console.log('Updated producto');
+    }
+    getProductsById = (id) => {
+        let data = fs.readFileSync(this.path, 'utf-8')
+        let dataJson = JSON.parse(data)
+
+        let productDb = dataJson.find(product => product.id === id) //si es verdadero, va a entrar al 1er if x la neg del principop
+        if (!productDb) {
+            return `no existe el producto con id: ${id}`
+        }
+        return productDb
+    }
+
+    getProducts = async () => {
+        try {
+            if (fs.existsSync(this.path)) {
+                const data = await fs.promises.readFile(this.path, 'utf-8')
+                const productDb = JSON.parse(data);
+                return productDb;
+            }
+            await fs.promises.writeFile(this.path, '[]', 'utf-8')
+            return []
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+}
+const productos = new ProductManager('./productos.json')
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+console.log("--------------------------------------espacio--------------------------------------")
+console.log("--------------------------------------espacio2--------------------------------------")
+
+console.log(productos.addProduct(
+    {
+        title: '10',
+        description: '10 ',
+        price: '90',
+        thumbnai5l: 'Sin foto ',
+        code: "10",
+        stock: '10',
+    }
+
+)
+)
+
+
+/* console.log(productos.crearProducto({
+        title: 'producto5',
+       description: ' Este es un producto prueba2 ',
+       price: 200,
+       thumbnail: 'Sin imagen',
+       code: 'abc123',
+       stock: 1555555555 
+
+})) 
+
+/* console.log(productos.getProductsById(2))
+console.log(productos.getProducts) */
+console.log("--------------------------------------espacio2--------------------------------------")
+
+/*  console.log(productos.eliminarProduct(3))  */
+
+console.log("--------------------------------------espacio2--------------------------------------")
+/* console.log(productos.updateProduct(2, {
+    title: 'uodate',
+    description: 'updatasadadesto es un producto',
+    price: 5,
+    thumbnail: 'sin imagen',
+    code: 1,
+    stock: 10
+})) */
+
+/* addProduct = (newItem) => {
 
         const productDb = this.products.find(product => product.code === newItem.code)
         if (productDb) {
@@ -54,116 +167,3 @@ class ProductManager { //genero la clase pero deberia poder optimizarla para que
         await fs.promises.writeFile(path, JSON.stringify(this.products)) //espera 
         return producto
     } */
-
-    consultarProducto = async () => {
-
-        if (fs.existsSync(path)) {
-            const data = await fs.promises.readFile(path, 'utf-8')
-            console.log(data)
-            const producto = JSON.parse(data)
-            return producto
-        }
-        else {
-            return this.products
-        }
-    }
-    eliminarProduct(id){
-        let data = fs.readFileSync(this.path, 'utf-8') //lectura de la ruta que paso en la class
-
-        let dataJS = JSON.parse(data)
-
-        dataJS.splice((id - 1), 1)
-
-        let contador = 1
-
-        dataJS.forEach(product => {  // recorro productos para en contrar el id
-            product.id = contador++
-        })
-
-        fs.writeFileSync(this.path, `${JSON.stringify(dataJS, null, 2)}`, 'utf-8') //mando null para sacar
-    }
-
-
-    updateProduct = async (id, update) => {
-        const data = await fs.promises.readFile(this.path, 'utf-8')
-        const productDb = await JSON.parse(data)
-        const index = await productDb.findIndex(product => product.id === id)
-        if (index === -1) {
-          return console.log(`No existe producto con el id: ${id}`)
-        }
-        productDb[index] = { ...update, id: productDb[index].id }
-        fs.promises.writeFile(this.path, JSON.stringify(productDb, null,'\t'))
-        console.log('Updated producto');
-      }
-getProductsById = (id) => {
-    let data = fs.readFileSync(this.path, 'utf-8')
-    let dataJson = JSON.parse(data)
-
-    let productDb = dataJson.find(product => product.id === id) //si es verdadero, va a entrar al 1er if x la neg del principop
-    if (!productDb) {
-        return `no existe el producto con id: ${id}`
-    }
-    return productDb
-}
-
-getProducts = async () => {
-    try {
-        if (fs.existsSync(this.path)) {
-            const data = await fs.promises.readFile(this.path, 'utf-8')
-            const productDb = JSON.parse(data);
-            return productDb;
-        }
-        await fs.promises.writeFile(this.path, '[]', 'utf-8')
-        return []
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-}
-const productos = new ProductManager('./productos.json')
-
-
-
-console.log("--------------------------------------espacio--------------------------------------")
-console.log("--------------------------------------espacio2--------------------------------------")
-
-/* console.log(productos.addProduct(
-    {
-        title: '2',
-        description: '3 ',
-        price: '3',
-        thumbnail: 'Sin ',
-        code: "22",
-        stock: '44',
-    },
-
-)
-)
- */
-
-/* console.log(productos.crearProducto({
-        title: 'producto5',
-       description: ' Este es un producto prueba2 ',
-       price: 200,
-       thumbnail: 'Sin imagen',
-       code: 'abc123',
-       stock: 1555555555 
-
-})) 
-
-/* console.log(productos.getProductsById(2))
-console.log(productos.getProducts) */
-console.log("--------------------------------------espacio2--------------------------------------")
-
- console.log(productos.eliminarProduct(3)) 
-
-console.log("--------------------------------------espacio2--------------------------------------")
-/* console.log(productos.updateProduct(2, {
-    title: 'uodate',
-    description: 'updatasadadesto es un producto',
-    price: 5,
-    thumbnail: 'sin imagen',
-    code: 1,
-    stock: 10
-})) */
