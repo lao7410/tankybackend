@@ -13,8 +13,7 @@ app.get("/products", async (req, res) => {
     const { limit } = req.query
     const listadoProducts = await productManager.consultarProducto()
     try {
-        let productosConLimit = limit ? res.send( listadoProducts.map( product => product.id <= limit )) : res.send(listadoProducts)
-        return res.send( productosConLimit )
+        let productosConLimit = limit ? res.send( listadoProducts.filter( product => product.id <= limit )) : res.send(listadoProducts)
     } catch (err) {
         console.error(err)
     }

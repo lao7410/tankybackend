@@ -98,7 +98,7 @@ const productos = new ProductManager('./productos.json')
 //console.log("--------------------------------------espacio--------------------------------------")
 /* console.log(productos.consultarProducto()) */
 //console.log("--------------------------------------espacio2--------------------------------------")
-  console.log(productos.addProduct(
+/*   console.log(productos.addProduct(
     {
         title: 'Prueba de Product',
         description: 'Esto es una prueba 22',
@@ -109,4 +109,4 @@ const productos = new ProductManager('./productos.json')
     }
 
 )
-)
+) */
