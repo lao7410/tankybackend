@@ -16,5 +16,8 @@
     "url": "https://github.com/lao7410/tankybackend/issues"
   },
   "homepage": "https://github.com/lao7410/tankybackend#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
   "description": ""
 }

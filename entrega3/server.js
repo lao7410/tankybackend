@@ -1,9 +1,9 @@
-const express = require('express')
-/* import express, { query } from 'express' */
-const classe='./entrega2/classe'
+/* const express = require('express') */
+import express, { query } from 'express'
 const app = express()
 const PORT = 8080
 app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -18,7 +18,17 @@ const arrayUsuarios = [
 
 ]
 
-app.get('/', (req, res) => {
+/* app.get('/', (req, res) => {
+    res.send(arrayUsuarios)
+})
+ */
+//https://localhost:8080/api/usuarios
+app.get('/api/usuarios', (req, res) => {
+    res.send(arrayUsuarios)
+})
+
+//https://localhost:8080//api/usuarios
+app.post('/api/usuarios', (req, res) => {
     res.send(arrayUsuarios)
 })
 
@@ -55,13 +65,13 @@ app.get('/params/:nombre/:id', (req, res) => {
 
 app.get('/query', (req, res) => {
     console.log(req.query)
-    const { genero} = req.query
+    const { genero } = req.query
 
-    if(!genero || (genero!=='F' && genero!=='M')) {
-        return res.send({arrayUsuarios})
-        }
-        let userFilter = arrayUsuarios.filter(user => user.genero === genero)
-    res.send({userFilter})
+    if (!genero || (genero !== 'F' && genero !== 'M')) {
+        return res.send({ arrayUsuarios })
+    }
+    let userFilter = arrayUsuarios.filter(user => user.genero === genero)
+    res.send({ userFilter })
 
 })
 
@@ -70,7 +80,5 @@ app.listen(PORT, err => {
     console.log(`Escuchando el puerto ${PORT}`)
 })
 
-////////////////
-//CLASE 7
-////////////////
+
 
