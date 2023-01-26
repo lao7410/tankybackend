@@ -7,29 +7,32 @@ const PORT = 8080
 
 const productManager = new ProductManager
 
-//ruta ‘/products’, la cual debe leer el archivo de productos y 
-//devolverlos dentro de un objeto. Agregar el soporte para recibir por query 
-//param el valor ?limit= el cual recibirá un límite de resultados.
 
 app.get("/products", async (req, res) => {
+    //Se mandará a llamar desde el navegador a la url http://localhost:8080/products?limit=5 , eso debe devolver sólo
     const { limit } = req.query
     const listadoProducts = await productManager.consultarProducto()
+    try {
+        let productosConLimit = limit ? res.send( listadoProducts.map( product => product.id <= limit )) : res.send(listadoProducts)
+        return res.send( productosConLimit )
+    } catch (err) {
+        console.error(err)
+    }
+    finally {
+        console.log('productos cargados')
+    }
 
-    
-    res.send(listadoProducts)
 
 
-    
-    
 })
-    
-    
-   
-    
-  /*   const data = await productManager.consultarProducto()
-    res.send(data)
-    console.log(data) */
-    
+
+
+
+
+/*   const data = await productManager.consultarProducto()
+  res.send(data)
+  console.log(data) */
+
 
 
 app.get('/products/:id', (req, res) => {
