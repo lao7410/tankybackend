@@ -1,0 +1,320 @@
+const fs = require('fs')
+
+
+
+class CartManager {
+    constructor(path) {
+        this.path = path
+    }
+    addCart = async () => {
+        try {
+            const shoppingcart = {
+                productos: []
+            }
+            const data = await this.getCarts()
+            data.length === 0 ? shoppingcart.id = 1 : shoppingcart.id = data[data.length - 1].id + 1
+            const newData = JSON.stringify([...data, shoppingcart])
+            await fs.promises.writeFile(this.path, newData, 'utf-8')
+            return shoppingcart
+        }
+        catch (err) {
+            throw new Error("Error al crear el carrito", err)
+        }
+    }
+
+    getCarts = async () => { //copia de getProduct repetir en los otros NO OLVIDAR TEST y ruteo
+        if (fs.existsSync(this.path)) {
+            try {
+                const data = await fs.promises.readFile(this.path)
+                const dataParsed = JSON.parse(data)
+                return dataParsed
+            }
+            catch (err) {
+                throw new Error("Error al leer productos", err)
+            }
+        }
+        else {
+            await fs.promises.writeFile(this.path, '[]', 'utf-8')
+            return []
+        }
+    }
+
+    getCartsById = async (id) => {
+        const data = await this.getCarts()
+        const findCartId = data.find(findCartId(cart => cart.id === id))
+        const index = data.findIndex(cart => cart.id === id)
+        if (find) return { find, index }
+        else throw new Error("No existe cart")
+    }
+    /*  const array1 = [5, 12, 8, 130, 44]; 
+    const found = array1.find(element => element > 10);
+    console.log(found);
+    // Expected output: 12
+    data.find(cart => cart.id === id)
+    const array1 = [5, 12, 8, 130, 44];
+    const isLargeNumber = (element) => element > 13;
+    console.log(array1.findIndex(isLargeNumber));
+    // Expected output: 3 */
+
+    getCartsProducts = async (id) => {
+        try {
+            const { find } = await this.getCartsById(id)
+            return find.productos
+        }
+        catch (err) {
+            throw new Error(err.message)
+        }
+    }
+
+    addProductToCarts = async (cid, pid) => {
+        try {
+            const shoppingcarts = await this.getCarts()
+            const { find: cart, index } = await this.getCartsById(cid)
+            const prodFind = cart.productos.find(prod => prod.product === pid)
+            !prodFind ? cart.productos.push({ product: pid, quantity: 1 }) : prodFind.quantity++
+            shoppingcarts[index] = cart
+            await fs.promises.writeFile(this.path, JSON.stringify(shoppingcarts), 'utf-8')
+            return shoppingcarts
+        }
+        catch (err) {
+            throw new Error(err.message)
+        }
+    }
+}
+
+module.exports = CartManager
+
+
+const fs = require('fs')
+const path = './src/mockDB/Products.json'
+
+
+class ProductManager {
+
+    constructor() {
+        this.path = path
+    }
+
+    readfile = async () => {
+        try {
+            const data = await fs.promises.readFile(this.path, 'utf-8')
+            console.log(data)
+            return JSON.parse(data)
+        } catch (error) {
+            return []
+        }
+    }
+
+    getProducts = async () => {
+        try {
+            return await this.readFile()
+        } catch (error) {
+            return 'Noaaaaaaaaaaaaaaaaaaaaaa hay productos cargados'
+        }
+    }
+    
+    /* 
+    if (fs.existsSync(this.path)) {
+        try {
+            const data = await fs.promises.readFile(this.path)
+            const dataParsed = JSON.parse(data)
+            return dataParsed
+        }
+        catch (err) {
+            throw new Error("Error al leer productos", err)
+        }
+    }
+    else {
+        await fs.promises.writeFile(this.path, '[]', 'utf-8')
+        return []
+    }
+} */
+
+    getProductsById = async (id) => {
+        try {
+            const products = await this.readFile()
+            return products.find(product => product.id === id)
+        } catch (err) {
+            return new Error(err)
+        }
+    }
+
+    addProduct = async (newItem) => {
+        try {
+            let products = await this.readFile()
+            const productDb = products.find(product => product.code === newItem.code)
+            console.log(productDb)
+            if (productDb) {
+                return "Ya esta el product"
+            } if (newItem.title==='' /* || !newItem.description || !newItem.price || !newItem.code || !newItem.stock || !newItem.category */) {
+                return 'ERROR, complete campos'
+
+            } if (products.length === 0) {
+                newItem.id = 1
+                products.push(newItem)
+            } else {
+                products = [...products, { ...newItem, id: products[products.length - 1].id + 1 }]
+            }
+            await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2), 'utf-8')
+            return 'Producto cargado'
+        } catch (error) {
+            return new Error(error)
+        }
+    }
+    /*  const products = {
+         title,
+         description,
+         price,
+         thumbnail,
+         code,
+         stock,
+         category,
+         status
+     }
+     const data = await this.getProducts()
+     if (data.some((prod => prod.code === code))) {
+         throw new Error("Producto duplicado")
+     }
+     data.length === 0 ? products.id = 1 : products.id = data[data.length - 1].id + 1
+     const newData = JSON.stringify([...data, products])
+     try {
+         await fs.promises.writeFile(this.path, newData, 'utf-8')
+         return products
+     }
+     catch (err) {
+         throw new Error("Error al grabar el producto", err)
+     }
+ } */
+
+    updateProduct = async (id, update) => {
+        const data = await fs.promises.readFile(this.path, 'utf-8')
+        const productDb = await JSON.parse(data)
+        const index = await productDb.findIndex(product => product.id === id)
+        if (index === -1) {
+            return console.log(`No existe producto con el id: ${id}`)
+        }
+        productDb[index] = { ...update, id: productDb[index].id }
+        fs.promises.writeFile(this.path, JSON.stringify(productDb, null, '\t'))
+        console.log('Updated producto');
+    }
+
+    deleteProduct = async (id) => {
+        try {
+            const products = await this.getProducts()
+            const { index, find } = await this.getProductById(Number(id))
+            find.status = false
+            products[index] = find
+            await fs.promises.writeFile(this.path, JSON.stringify(products), 'utf-8')
+            return find
+        }
+        catch (err) {
+            return (err)
+        }
+    }
+}
+
+
+module.exports = ProductManager
+
+-------------------------
+import { Router } from "express"
+import { ProductManager } from "../productManager.js"
+import { CartManager } from "../cartManager.js"
+
+const router = Router()
+
+const productManager = new ProductManager
+const cartManager = new CartManager
+
+
+router.post('/', async (req, res) => {
+    await cartManager.createCart()          // se crea un nuevo carrito {id, products: []}
+    res.send({mensaje: "carrito creado"})
+})
+
+router.get('/:cid', async (req, res) => {
+    const { cid } = req.params              // se recibe cid de los parametros
+    
+    try {
+        let arrPC = []
+        const cartProducts = await cartManager.getCartProducts(cid)     // se guarda en carProducts el arreglo de productos del carrito cuyo id sea igual a cid
+    
+        await cartProducts.forEach(async (element) => {                 // se recorre cartProducts 
+            try {
+                let product = await productManager.getProductById(element.id)   // se guarda en product el producto entero
+
+                product.quantity = element.quantity
+                arrPC = [...arrPC, product]             // se guardan todos los productos en arrPC
+
+                if(cartProducts.length == arrPC.length) res.send(arrPC)     // cuando se haya terminado de recorrer el arreglo respondemos a la peticion con arrPC
+            } catch (error) {
+                console.log(error)
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+    
+})
+
+router.post('/:cid/product/:pid', async (req, res) => {
+    const { cid, pid } = req.params         // se reciben cid, pid de los parametros
+
+    try {
+        await cartManager.uploadProduct(cid, pid)   // se sube el producto al carrito
+        res.send({mensaje: "producto agregado al carrito"})
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+export default router
+
+
+----------------------------------
+const { Router } = require("express")
+const router = Router()
+
+
+router.post('/', async (req, res) => {
+    const cart = req.body
+    cart.id = Date.now() //cargar id que no esta viniendo xq ahi manda cualquiera
+    cart.product = []
+    //metodo q tiene la clase para agregar el cart al archivo
+    res.status(200).json({
+        cart,
+        msj: 'cart creado'
+    })
+
+})
+router.get('/:cid', async (req, res) => {
+    const { cid } = req.params
+    cart = {
+        id: cid,
+        product: []
+    }
+    //con el id buscar el carrito
+    res.status(200).json({
+        msj: 'EL CARRITO',
+        cid
+    })
+
+})
+
+router.post('/:cid/product/:pid', async (req, res) => {
+    const { cid, pid } = req.params
+    const cart = {
+        id: cid,
+        product: [{
+            id: pid,
+            quentity: 12
+        }]
+    }
+    res.status(200).json({
+
+        msj: 'producto agregado al cart',
+        cart
+    })
+
+})
+module.exports = router
