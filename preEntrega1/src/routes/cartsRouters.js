@@ -35,7 +35,4 @@ cartRouter.get("/:cid", async (req, res) => {
     }
 })
 
-//preguntar como cargar mas de un carrito aunq
-
-
 module.exports = cartRouter
