@@ -14,7 +14,7 @@ router.get('/', (req, res)=>{
     let testUser = {
         name: 'Estani   ',
         last_name: 'Rey',
-        role: 'admin',
+        role: 'user',
     }
     
     res.render('index', {

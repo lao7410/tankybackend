@@ -1,32 +1,29 @@
+const express = require('express');
 const { Router } = require("express")
-const ProductManager = require("../class/productManager")
-const productsRouter = Router()
-const productManager = new ProductManager("./mockDB/Productos.json")
 
+const productsRouter  = Router()
 
-
-productsRouter.get("/", async (req, res) => { //traigo a la func de la clase pasada,
+productsRouter.get("/", async (req, res) => {
     const { limit } = req.query
     const productos = await productManager.getProducts()
     if (!limit) return res.send({ productos })
-    res.json({ status: "success", payload: productos.slice(0, limit) })         //OJO RECORDA ESTO Array.prototype.slice()
-                                                                                //El método slice() devuelve una copia de una parte del array dentro de un nuevo array empezando por inicio hasta fin (fin no incluido). El array original no se modificará.
-})                                                                              //arr.slice([inicio [, fin]])    
+    res.json({ status: "success", payload: productos.slice(0, limit) })
+})
 
-productsRouter.get("/:pid", async (req, res) => {                              //Con fede ya visto
+productsRouter.get("/:pid", async (req, res) => {
     const { pid } = req.params
     const productos = await productManager.getProducts()
     const filtrado = productos.find(prd => prd.id === Number(pid))
     return filtrado ? res.send({ status: "success", payload: filtrado }) : res.json({ Error: "No se encontró producto" })
 })
-productsRouter.post("/", async (req, res) => {                                 //Preguntar a Lu si esta bien validado. Fede dijo q no validar en classes---- 
+productsRouter.post("/", async (req, res) => {
     const { title, description, code, price, status, stock, category, thumbnails } = req.body
     if (!title || !description || !code || !price || !status || !stock || !category) {
-        return res.status(400).send("Faltan Datos, agregar correctamente!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        return res.status(400).send("Enviar campos obligatorios")
     }
     try {
-        const addedProduct = await productManager.addProduct(title, description, code, price, status, stock, category, thumbnails)  ///cambiar a ingles correc LU---OK
-        res.status(200).json({ agregado: addedProduct })
+        const prodAgregado = await productManager.agregarProducto(title, description, code, price, status, stock, category, thumbnails)
+        res.status(200).json({ agregado: prodAgregado })
     }
     catch (err) {
         res.status(400).send(err.message)
@@ -34,12 +31,12 @@ productsRouter.post("/", async (req, res) => {                                 /
 
 })
 
-productsRouter.put("/:pid", async (req, res) => { //FUNCIONA CARAJ!!!!!!!!!!!!!!!!!
+productsRouter.put("/:pid", async (req, res) => {
     const { pid } = req.params
-    const newProduct = req.body
-    if (Object.keys(newProduct).length === 0) return res.status(400).send("Updated product")
+    const newProd = req.body
+    if (Object.keys(newProd).length === 0) return res.status(400).send("Enviar producto a actualizar")
     try {
-        const updated = await productManager.updateProduct(pid, newProduct)
+        const updated = await productManager.updateProduct(pid, newProd)
         res.status(200).json({ actualizado: updated })
     }
     catch (err) {
@@ -47,11 +44,11 @@ productsRouter.put("/:pid", async (req, res) => { //FUNCIONA CARAJ!!!!!!!!!!!!!!
     }
 })
 
-productsRouter.delete("/:pid", async (req, res) => {  // OK //MODIFICAR NOM ANTES DE SUBIR
+productsRouter.delete("/:pid", async (req, res) => {
     const { pid } = req.params
     try {
-        const deleteProd = await productManager.deleteProduct(pid)
-        res.status(200).json({ eliminado: deleteProd })
+        const deleted = await productManager.deleteProduct(pid)
+        res.status(200).json({ eliminado: deleted })
     }
     catch (err) {
         res.status(400).send(err.message)

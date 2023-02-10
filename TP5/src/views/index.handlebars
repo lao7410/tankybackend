@@ -1,26 +1,34 @@
-
 {{!-- body --}}
 <div>
     <h1>¡Hola, {{ user.name }}!, ¡Que gusto verte!</h1>
     <h2>Socket Io</h2>
     <hr>
-    <form action="">
+  {{!--   <form action="">
         <input type="text" name="mensaje">
-        <input type="submit" >
-    </form>
-    // const mensaje =  'mensaje'
+        <input type="submit">
+    </form> --}}
+    
+    <div>
+        <input type="text" name="chatbox" id="chatbox">
+    </div>
+    <div>
+        <ul id="messageLog"></ul>
+    </div>
     <hr>
     {{#if isAdmin}}
-        {{#each fakeApi}}
-            <div>
-                <p>Nombre del producto: {{this.name}}</p>
-                <p>Precio: {{this.price}}</p>
-                {{!-- <p>{{}}</p> --}}
-            </div>
-        {{/each}}
+    {{#each fakeApi}}
+    <div>
+        <p>Nombre del producto: {{this.name}}</p>
+        <p>Precio: {{this.price}}</p>
+        {{!-- <p>{{}}</p> --}}
+    </div>
+    {{/each}}
     {{else}}
-        <h2>Ud No tiene permisos necesarios para ver los productos</h2>
+    <h2>Ud No tiene permisos necesarios para ver los productos</h2>
     {{/if}}
 </div>
+
+
 <script src="/socket.io/socket.io.js"></script>
 <script src="/virtual/js/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.all.min.js"></script>

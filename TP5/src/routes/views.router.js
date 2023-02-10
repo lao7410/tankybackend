@@ -1,33 +1,28 @@
-const { Router } = require('express')
+const express =require('express');
+const { Router } = require("express")
+
+const ProductManager = require('../class/productManager')
 
 const router = Router()
 
-const fakeApi = [
-    {name: 'Producto 0',  price: 400},
-    {name: 'Producto 1',  price: 350},
-    {name: 'Producto 2',  price: 300},
-    {name: 'Producto 3',  price: 200},
-    {name: 'Producto 4',  price: 150}
-]
+const productManager = new ProductManager()
 
-router.get('/', (req, res)=>{    
-    let testUser = {
-        name: 'Estani   ',
-        last_name: 'Rey',
-        role: 'admin',
+router.get('/products', async (req, res)=>{
+    try {
+        const productos = await productManager.getProducts()
+        let datos = {
+            productos
+        }
+        
+        res.render('home', datos)
+    } catch (error) {
+        console.log(error)
     }
     
-    res.render('index', {
-        user: testUser,
-        isAdmin: testUser.role==='admin',
-        fakeApi,
-        style: 'index.css'
-    })
 })
 
-router.get('/register', (req, res)=>{
-    res.render('register')
+router.get('/realtimeproducts', (req, res)=>{
+    res.render('realTimeProducts')
 })
 
-module.exports = router
-// export default router
+module.exports =  router

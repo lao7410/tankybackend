@@ -4,6 +4,7 @@ const usersRouter = require('./routes/users.router.js')
 const productRouter = require("./routes/productRouter")
 const cartRouter = require("./routes/cartsRouters")
 const viewsRouter = require('./routes/views.router.js')
+const ProductManager = require('./class/productManager')
 
 const handlebars = require('express-handlebars')
 const { uploader } = require('./utils/multerConfig.js')
@@ -15,61 +16,77 @@ const PORT = 8080
 
 
 
+
+const productManager = new ProductManager()
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.use('/virtual', express.static(__dirname + '/public'))
-app.use(cookieParser())
+app.use('/public', express.static(__dirname + '/public'))
 
-//IMPLEMENTATION DE SOCKET SEGUN DIAPO
-//handlebars
 app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname + '/views')
 app.set('view engine', 'handlebars')
 
-app.use('/', viewsRouter)// me lleva a roites viewsroter
+app.use('/', viewsRouter)
+app.use('/api/products', productRouter)
+app.use('/api/carts', cartRouter)
 
-
-app.use("/api/products", productRouter)//PUESTO ACA PARA QUE INICIE
-app.use("/api/carts", cartRouter)//PUESTO ACA PARA QUE INICIE
-app.use('/api/usuarios', usersRouter)
-
-
-
-//Declarando el httpserver y ponerlo a escuar con el condicional
-const httpServer = app.listen(PORT, error => {
-    if (error) console.log(error)
-    console.log("ECUCHANDO EL PUERTO")
+const httpServer = app.listen(PORT, (err) => {
+    if (err) console.log(err);
+    console.log('Escuchando puerto: ', PORT);
 })
 
-/* const httpServer = require('http').createServer(app).listen(PORT, (errorDeescucha) => {
-    if (errorDeescucha) console.log("error de escucha en const=hhtoServer")
-    console.log("Escuchando el puerto, a ver si funciona") //hasta aca se escucha 18:47
-}) */
+httpServer.on
 
-const io = new Server(httpServer) //decalaro el socket sertver
+const socketServer = new Server(httpServer)
+console.log('probando')
+let productos
+console.log('Nuevo cliente conectado')
 
-const mensaje = []
+socketServer.on('connection', async socket => {
+    try {
+        productos = await productManager.getProducts()
+        socket.emit('mensajeServer', productos)
+    } catch (error) {
+        console.log(error)
+    }
 
-console.log("xq no andara????")
-io.on('connection', socket => {
-    console.log('Nuevo Cliente conectado')
-    socket.on('message', data => {
-        console.log(data)
+    socket.on('product', async data => {
+
+        const {
+            title,
+            description,
+            code,
+            price,
+            stock,
+            category,
+            
+        } = data
+        data.status = true
+        console.log('data: ', data)
+        console.log('denrtro del product soclet on')
+
+        if (!title || !description || !code || !price || !stock || !category) {
+            console.log('Debe completar todos los campos');
+        } else {
+            try {
+                await productManager.addProduct(data)
+                let datos = await productManager.getProducts()
+                socketServer.emit('productoAgregado', datos)
+            } catch (error) {
+                console.log(error)
+            }
+        }
     })
-    socket.emit('mensajeServer', 'Listo escuchandote')
-    socket.broadcast.emit('evento para todos menos el actual', 'algun tipo de mensaje')
-    io.emit('evento para todos', 'algun msj')
-    socket.on('disconnect', () => {
-        console.log('DESCONECTADO')
+
+    socket.on('deleteProduct', async data => {
+        try {
+            await productManager.deleteProduct(data)
+            let datos = await productManager.getProducts()
+            socketServer.emit('productoEliminado', datos)
+        } catch (error) {
+            console.log(error)
+        }
     })
 })
-
-console.log("salta lo del medio")
-
-
-
-app.get('/index', (req, res) => {
-    res.render('index', {});
-});
-

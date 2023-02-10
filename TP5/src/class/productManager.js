@@ -54,7 +54,6 @@ class ProductManager {
         if (find) return { find, idx }
         else throw new Error("No exit prod")
     }
-
     updateProduct = async (id, prod) => { //funiona
         const keys = Object.keys(prod)
         const values = Object.values(prod)
@@ -72,7 +71,6 @@ class ProductManager {
             throw new Error(err.message)
         }
     }
-
     deleteProduct = async (id) => {
         try {
             const products = await this.getProducts()
@@ -88,3 +86,4 @@ class ProductManager {
     }
 }
 module.exports = ProductManager
+
