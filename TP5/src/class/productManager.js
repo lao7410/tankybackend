@@ -1,9 +1,9 @@
 const fs = require('fs')
 
 class ProductManager {
-    #ruta = './mockDB/Productos.json'
+    #ruta = './Productos.json'
     constructor(path) {
-        this.productos = []
+        /* this.productos = [] */
         this.path = this.#ruta //ahora escribe!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      }
     addProduct = async (title, description, code, price, status = true, stock, category, thumbnail) => { //instanciar prod para validar del otro lado
@@ -11,7 +11,6 @@ class ProductManager {
             title,
             description,
             price,
-            thumbnail,
             code,
             stock,
             category,
