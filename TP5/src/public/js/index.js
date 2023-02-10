@@ -5,14 +5,10 @@ const title = document.querySelector('#title')
 const description = document.querySelector('#description')
 const code = document.querySelector('#code')
 const price = document.querySelector('#price')
-const statusInput = document.querySelector('#status')
 const stock = document.querySelector('#stock')
 const category = document.querySelector('#category')
-const thumbnail = document.querySelector('#thumbnail')
-
 const productID = document.querySelector('#productDelete')
 const deleteBtn = document.querySelector('#deleteProduct')
-
 const contenedor = document.querySelector('#container')
 
 submitProduct.addEventListener('click', (event) => {

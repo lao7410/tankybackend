@@ -18,7 +18,7 @@ productsRouter.get("/:pid", async (req, res) => {
 })
 productsRouter.post("/", async (req, res) => {
     const { title, description, code, price, status, stock, category, thumbnails } = req.body
-    if (!title || !description || !code || !price || !status || !stock || !category) {
+    if (!title || !description || !code || !price || !stock || !category) {
         return res.status(400).send("Enviar campos obligatorios")
     }
     try {

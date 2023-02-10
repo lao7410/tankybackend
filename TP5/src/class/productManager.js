@@ -1,34 +1,25 @@
 const fs = require('fs')
 
+
 class ProductManager {
     constructor(path) {
         this.path = path
     }
-    addProduct = async (title, description, code, price, status = true, stock, category, thumbnail) => { //instanciar prod para validar del otro lado
-        const producto = {
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock,
-            category,
-            status
-        }
-        const data = await this.getProducts()
-        if (data.some((prod => prod.code === code))) {
-            throw new Error("CODIG DUPLICADO")         // preg a Lu---------[Tutora] Luisina González 19:22    throw new error y tenes q pasarle el ({ msg: "error"})
-        }
-        data.length === 0 ? producto.id = 1 : producto.id = data[data.length - 1].id + 1
-        const newData = JSON.stringify([...data, producto])
+    addProduct = async (newItem) => {
+        let productDb = await this.getProducts()
         try {
-            await fs.promises.writeFile(this.path, newData, 'utf-8')
-            return producto
+          if (productDb.length === 0) {
+            newItem.id = 1
+            productDb.push(newItem)
+          } else {
+            productDb = [ ...productDb, { ...newItem, id:productDb[productDb.length -1].id + 1}]
+          }
+          await fs.promises.writeFile(this.path, JSON.stringify(productDb, null,'\t'))
+          console.log('Producto cargado en la base de datos');
+        } catch (error) {
+          console.log(error);
         }
-        catch (err) {
-            throw new Error("EROR CARGANDO", err)
-        }
-    }
+      }
 
     getProducts = async () => {
         if (fs.existsSync(this.path)) {
@@ -73,17 +64,20 @@ class ProductManager {
     }
     deleteProduct = async (id) => {
         try {
-            const products = await this.getProducts()
-            const { find, idx } = await this.getProductById(Number(id))
-            find.status = false
-            products[idx] = find
-            await fs.promises.writeFile(this.path, JSON.stringify(products), 'utf-8')
-            return find
+          const products = await this.getProducts()
+          const productIndex = products.findIndex(prod => prod.id === id)
+      
+          if (productIndex === -1) {
+            throw new Error("No se encontró el producto con id " + id)
+          }
+      
+          products.splice(productIndex, 1)
+          await fs.promises.writeFile(this.path, JSON.stringify(products), 'utf-8')
+          return products
+        } catch (err) {
+          throw new Error(err.message)
         }
-        catch (err) {
-            throw new Error(err.message)
-        }
-    }
+      }
 }
 module.exports = ProductManager
 
