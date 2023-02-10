@@ -12,7 +12,7 @@ const { uploader } = require('./utils/multerConfig.js')
 const { Server } = require('socket.io')// saco server para crear socket.io
 
 const app = express()
-const PORT = 9000
+const PORT = 8080
 
 
 

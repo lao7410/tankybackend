@@ -1,5 +1,4 @@
 const ioServer = io()
-
 const submitProduct = document.querySelector('#submitProduct')
 const title = document.querySelector('#title')
 const description = document.querySelector('#description')
