@@ -1,9 +1,11 @@
 const fs = require('fs')
 
 class ProductManager {
+    #ruta = './mockDB/Productos.json'
     constructor(path) {
-        this.path = path
-    }
+        this.productos = []
+        this.path = this.#ruta //ahora escribe!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     }
     addProduct = async (title, description, code, price, status = true, stock, category, thumbnail) => { //instanciar prod para validar del otro lado
         const producto = {
             title,
@@ -17,7 +19,7 @@ class ProductManager {
         }
         const data = await this.getProducts()
         if (data.some((prod => prod.code === code))) {
-            throw new Error("CODIG DUPLICADO")         // preg a Lu---------[Tutora] Luisina González 19:22    throw new error y tenes q pasarle el ({ msg: "error"})
+            throw new Error("CODIG DUPLICADO")         
         }
         data.length === 0 ? producto.id = 1 : producto.id = data[data.length - 1].id + 1
         const newData = JSON.stringify([...data, producto])
