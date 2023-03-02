@@ -71,7 +71,7 @@ router.post('/', async (req, res = response) => {
 
 
 // PUT http://localhost:8080/api/usuarios /:userId
-router.put('/:userId', async (request, response) => {
+/* router.put('/:userId', async (request, response) => {
 
     const { userId } = request.params
     let { nombre, apellido, email } = request.body
@@ -84,16 +84,16 @@ router.put('/:userId', async (request, response) => {
         status: 'succes',
         result
     })
-}
+} */
     /* // venga el id
     const index = arrayUsuarios.findIndex(user => user.id === userId)
     // exista el usuario 
     if (index === -1) {
         return response.status(400).send({ message: 'No se encuentra el usuario' })
     }
-     */
+     
     //mada el  cliente request 
-    let user = request.body
+    const user = request.body
 if (!user.nombre || !user.apellido) {
     return response.status(400).send({ message: 'Che pasar todos los datos' })
 }
@@ -106,7 +106,7 @@ response.status(201).send({
     users: arrayUsuarios,
     message: 'usuario Modificado'
 })
-})
+)
 
 // DELETE http://localhost:8080/api/usuarios /:userId
 router.delete('/:userId', (req, res) => {
@@ -123,4 +123,4 @@ router.delete('/:userId', (req, res) => {
 })
 
 module.exports = router
-// export default router
+// export default router*/
