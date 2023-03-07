@@ -1,26 +1,61 @@
-const express = require('express')
-const { initConnection } = require('./config/conectionMongo')
-const useRouter = require('./routes')
-const handlebars = require('express-handlebars')
+import express, { json, urlencoded } from "express";
+import handlebars from "express-handlebars";
+import connectionDB from "./config/connectionDB.js"
+import MessageManager from "./daos/classes/MongoDb/MessageManager.js";
+import { Server } from "socket.io";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import mongoose from 'mongoose';
+import router from './routes/index.js'; // Importa el router
 
+mongoose.set('strictQuery', false);
 
-const app = express()
-const PORT = 8080
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-initConnection()
+const messageManager = new MessageManager()
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(express.static(__dirname + 'public'))
+const app = express();
+const PORT = 8080;
+app.use(json());
+app.use(urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/public"));
 
-//motor de plantillas
-app.engine('handlebars', handlebars.engine())
-app.set('views', __dirname + '/views')
-app.set('view engine', 'handlebars')
+app.engine("handlebars", handlebars.engine());
+app.set("views", __dirname + "/views");
+app.set("view engine", "handlebars");
 
-app.use(useRouter)
+// Agrega el router como middleware
+app.use('/', router);
 
-app.listen(PORT, err => {
-    if (err) return console.error(err)
-    console.log('Servidor listening on port: ' + PORT)
-}) // localhost 
+const httpServer = app.listen(PORT, (err) => {
+    if (err) console.log(err);
+    console.log(`Escuchando en el puerto ${PORT}`);
+});
+
+connectionDB();
+
+app.get('/chat', (req, res, next) => {
+    res.render('chat')
+})
+
+const io = new Server(httpServer)
+
+io.on('connection', socket => {
+    console.log('Nuevo cliente conectado');
+
+    socket.on('message', async data => {
+        console.log(data);
+        await messageManager.addMessage(data)
+        let messages = await messageManager.getMessages()
+        // console.log(messages);
+        io.emit('messageLog', messages)
+    })
+
+    socket.on('authenticated', data => {
+        socket.broadcast.emit('newUserConnect', data)
+    })
+
+})
+
+export default app;
