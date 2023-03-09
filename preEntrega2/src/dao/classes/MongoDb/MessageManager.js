@@ -10,7 +10,7 @@ export default class MessageManager {
         return await MessageModel.find()
     }
 
-    async addMessage (data) {
+    async addMessages (data) {
         const {user, message} = data
         return await MessageModel.create({user, message})
     }

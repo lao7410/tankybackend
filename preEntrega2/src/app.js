@@ -40,7 +40,7 @@ io.on('connection', socket=>{
 
   socket.on('message',async data=>{
       console.log(data);
-      await MessageManager.addMessage(data)
+      await messageManager.addMessages(data)
       let messages = await messageManager.getMessages()
       // console.log(messages);
       io.emit('messageLog', messages)
