@@ -1,25 +1,26 @@
-import ProductModel from "../../models/products.model";
+import productsModel from "../../models/productsModel.js";
 
-export  class ProductManager1 {
+
+export  class ProductManagerMongo {
   #products;
   constructor() {
     this.#products = [];
   }
 
   async getProducts () {
-    this.#products = await ProductModel.find({})
+    this.#products = await productsModel.find({})
     return this.#products
   }
 
   async getProductById (id) {
-    let product = await ProductModel.findById(id)
+    let product = await productsModel.findById(id)
     return product
   }
 
   async addProduct (title, description, price, thumbnail, code, stock, category) {
     // const {title, description, price, thumbnail, code, stock, category} = product
     try {
-        let product = await ProductModel.create({
+        let product = await productsModel.create({
         title,
         description,
         price,
@@ -37,7 +38,7 @@ export  class ProductManager1 {
 
   async updateProduct (id, obj) {
     try {
-         await ProductModel.findByIdAndUpdate(id, obj, (err, doc)=>{
+         await productsModel.findByIdAndUpdate(id, obj, (err, doc)=>{
           if (err) console.log(err);
           else {console.log('updated');}
         })
@@ -48,7 +49,7 @@ export  class ProductManager1 {
 
   async deleteProduct (id) {
     try {
-        await ProductModel.findByIdAndDelete(id, (err, doc)=>{
+        await productsModel.findByIdAndDelete(id, (err, doc)=>{
           if (err) console.log(err);
           else {console.log('deleted');}
         })
@@ -57,4 +58,3 @@ export  class ProductManager1 {
     }
   }
 }
-export default ProductManager1

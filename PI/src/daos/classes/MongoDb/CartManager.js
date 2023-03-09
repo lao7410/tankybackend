@@ -1,44 +1,124 @@
-import CartModel from "../../models/carts.model"
+import cartsModel from "../../models/cartsModel.js"
 
-export default class CartManager { 
-    #carts
-    constructor(){
-        this.#carts = []
-    }
+export class CartManagerMongo {
 
-    async createCart () {
+    async createCart(){
         try {
-            await CartModel.create({
-                products: []
-            })
+            await cartsModel.create({products: []})
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
     }
 
-    async getCart (id) {
+    async uploadProduct(cid, pid){
         try {
-            return await CartModel.findById(id)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async addProduct (cid, pid) {
-        try {
-            let cart = await CartModel.findById(cid)
-            let product = cart.products.findIndex(prod => prod.id === pid)
-            if (product > -1) {
-                cart.products[product].quantity++
-                let update = await CartModel.findByIdAndUpdate(cid, cart)
-                return update
-            } else {
-                cart.products.push({_id: pid})
-                let update = await CartModel.findByIdAndUpdate(cid, cart)
-                return update
+            let carrito = await cartsModel.findOne({_id: cid})
+            
+            let product = carrito.products.find(product => product.pid == pid)
+            console.log(cid)
+            // console.log(carrito)
+            console.log(product)
+    
+            if (product !== undefined) {
+                await cartsModel.updateOne(
+                    {
+                        _id: cid
+                    },
+                    {
+                        $set:
+                        {
+                            'products.$[pid]': {'pid': pid, 'quantity': product.quantity + 1}
+                        }
+                    },
+                    {
+                        arrayFilters: 
+                        [
+                            {'pid.pid': pid}
+                        ]
+                    }
+                )
+            }
+    
+            if (product == undefined) {
+                await cartsModel.findByIdAndUpdate(cid, {$push: {'products': {pid: pid, quantity : 1}}})
             }
         } catch (error) {
-            console.log(error);
+            console.log(error)
+        }
+    }
+
+    async getCartProducts(cid, limit, page){
+        try {
+            const cartProducts = await cartsModel.paginate({_id: cid}, {limit: limit, page: page, lean: true})
+            console.log(cartProducts)
+            return cartProducts
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async deleteProduct(cid, pid){
+        try {
+            let carrito = await cartsModel.findOne({cid: cid})
+    
+            let products = carrito.products.filter(product => product.pid != pid)
+
+            console.log(products)
+
+            // await cartsModel.findByIdAndUpdate(cid, products)
+
+            await cartsModel.updateOne(
+                {
+                    cid: cid
+                },
+                {
+                    $set:
+                    {
+                        'products': products
+                    }
+                }
+            )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async deleteCartProducts(cid){
+        try {
+            let products = []
+
+            await cartsModel.updateOne(
+                {
+                    _id: cid
+                },
+                {
+                    $set:
+                    {
+                        'products': products
+                    }
+                }
+            )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async arrayProductsUpdate(cid, data){
+        try {
+            await cartsModel.updateOne(
+                {
+                    _id: cid
+                },
+                {
+                    $set:
+                    {
+                        'products': data
+                    }
+                }
+            )
+        } catch (error) {
+            console.log(error)
         }
     }
 }
+

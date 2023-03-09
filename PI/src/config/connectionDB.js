@@ -1,15 +1,15 @@
-import mongoose from "mongoose";
+import { connect } from "mongoose"
 
-const url = 'mongodb://localhost:27017/ecommerce';
+const URL = 'mongodb+srv://tankysoluciones:CoderHouseBackend@cluster0.2zdod6i.mongodb.net/?retryWrites=true&w=majority/'
 
-export const dbConnection = async () => {
-  try {
-    console.log('db conectada');
-    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-  } catch (error) {
-    console.log(error);
-    process.exit();
-  }
+const connectionDB = async () => {
+    try {
+        console.log('db conectada');
+        return await connect(URL)
+    } catch (error) {
+        console.log(error);
+        process.exit()
+    }
 }
 
-export default dbConnection;
+export default connectionDB

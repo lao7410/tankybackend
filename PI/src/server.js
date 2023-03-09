@@ -1,61 +1,113 @@
-import express, { json, urlencoded } from "express";
-import handlebars from "express-handlebars";
-import connectionDB from "./config/connectionDB.js"
-import MessageManager from "./daos/classes/MongoDb/MessageManager.js";
-import { Server } from "socket.io";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import mongoose from 'mongoose';
-import router from './routes/index.js'; // Importa el router
-
-mongoose.set('strictQuery', false);
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const messageManager = new MessageManager()
+import express from 'express';
+import handlebars from 'express-handlebars';
+import { Server } from 'socket.io';
+import productsRouter from './routes/productsRouter.js';
+import cartsRouter from './routes/cartsRouter.js';
+import __dirname from './utils/dirname.js';
+import { ProductManager } from './daos/classes/sysFile/productsManagerMongo.js';
+import connectionDB from './config/ConnectionDB.js';
+import chatModel from "./daos/models/messageModel.js";
+import viewsRouter from './routes/viewsRouter.js';
+import userRouter from './routes/userRouter.js';
+import useRouter from './routes/indexRouter.js'
+import uploader from './utils/uploader.js';
 
 const app = express();
 const PORT = 8080;
-app.use(json());
-app.use(urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/public"));
-
-app.engine("handlebars", handlebars.engine());
-app.set("views", __dirname + "/views");
-app.set("view engine", "handlebars");
-
-// Agrega el router como middleware
-app.use('/', router);
-
-const httpServer = app.listen(PORT, (err) => {
-    if (err) console.log(err);
-    console.log(`Escuchando en el puerto ${PORT}`);
-});
 
 connectionDB();
 
-app.get('/chat', (req, res, next) => {
-    res.render('chat')
+const productManager = new ProductManager();
+
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+app.use('/public' ,express.static(__dirname+'/public'));
+app.use(uploader.single('myflie')); // Agrega el middleware
+
+app.engine('handlebars', handlebars.engine());
+app.set('views', __dirname+'/views');
+app.set('view engine', 'handlebars');
+
+app.use('/', viewsRouter);
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter);
+app.use('/api/users',  userRouter)
+
+/* app.use('/cookie',cookieRouter) */
+
+const httpServer = app.listen(PORT, (err)=>{
+    if (err) console.log(err)
+    console.log('Escuchando puerto: ', PORT);
 })
 
-const io = new Server(httpServer)
+httpServer.on;
 
-io.on('connection', socket => {
+app.use(useRouter);
+
+const socketServer = new Server(httpServer);
+
+
+
+
+let productos;
+let mensajes;
+
+socketServer.on('connection', async socket => {
     console.log('Nuevo cliente conectado');
+    try {
+        productos = await productManager.getProducts();
+        mensajes = await chatModel.find();
+        socket.emit('mensajeServer', productos);
+        socket.emit('mensajesChat', mensajes);
+    } catch (error) {
+        console.log(error);
+    }
 
-    socket.on('message', async data => {
+    socket.on('product', async data => {
+        console.log('data: ', data);
+
+        const   {
+            title,
+            description,
+            code,
+            price,
+            status,
+            stock,
+            category,
+            thumbnail
+        } = data;
+
+        if (title == '' || description == '' || code == '' || price == '' || status == '' || stock == '' || category == '') {
+            console.log('todo mal');
+        }else{
+            try {
+                await productManager.addProduct(title, description, price, thumbnail, code, stock, status, category);
+                let datos = await productManager.getProducts();
+                socketServer.emit('productoAgregado', datos);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    });
+
+    socket.on('deleteProduct', async data => {
+        try {
+            await productManager.deleteProduct(data);
+            let datos = await productManager.getProducts();
+            socketServer.emit('prodcutoEliminado', datos);
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+    socket.on('msg', async data => {
         console.log(data);
-        await messageManager.addMessage(data)
-        let messages = await messageManager.getMessages()
-        // console.log(messages);
-        io.emit('messageLog', messages)
-    })
-
-    socket.on('authenticated', data => {
-        socket.broadcast.emit('newUserConnect', data)
-    })
-
-})
-
-export default app;
+        try {
+            await chatModel.insertMany(data);
+            let datos = await chatModel.find();
+            socketServer.emit('newMsg', datos);
+        } catch (error) {
+            console.log(error);
+        }
+    });
+});

@@ -1,15 +1,19 @@
 <div>
-    <h1>Chat Websocket</h1>
-    <div>
-        <label for="">MENSAJE</label>
-        <input type="text" name="chatbox" id="chatbox">
-    </div>
-    <div>
-        <ul id="messageLog"></ul>
-    </div>
+    <h2>ingrese su nombre</h2>
+    <form>
+        <label>email</label> <br>
+        <input type="text" name="user" id="user"> <br>
 
+        <label>Mensaje</label> <br>
+        <input type="text" name="message" id="mensaje"> <br>
+
+        <input type="submit" id="submitMsg">
+    </form>
+
+    <h2>Chat</h2>
+
+    <div id="chatContainer"></div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src=" https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.all.min.js "></script>
-<script src="/js/index.js"></script>
+<script src="/public/js/chat.js"></script>
