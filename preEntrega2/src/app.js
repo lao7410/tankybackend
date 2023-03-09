@@ -3,6 +3,7 @@ import handlebars from "express-handlebars";
 import useRouter from "./routes/index.js"
 import connectionDB from "./config/connectionDB.js";
 import MessageManager from "./dao/classes/MongoDb/MessageManager.js";
+
 import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -39,7 +40,7 @@ io.on('connection', socket=>{
 
   socket.on('message',async data=>{
       console.log(data);
-      await messageManager.addMessage(data)
+      await MessageManager.addMessage(data)
       let messages = await messageManager.getMessages()
       // console.log(messages);
       io.emit('messageLog', messages)

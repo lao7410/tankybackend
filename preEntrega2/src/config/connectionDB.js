@@ -1,6 +1,7 @@
 import { connect } from "mongoose";
 
-const url = 'mongodb+srv://tankysoluciones:CoderHouseBackend@cluster0.2zdod6i.mongodb.net/?retryWrites=true&w=majority'
+/* const url = 'mongodb+srv://tankysoluciones:CoderHouseBackend@cluster0.2zdod6i.mongodb.net/?retryWrites=true&w=majority' */
+const url='mongodb://localhost:27017/ecommerce'
 
 
 const dbConnection = async () => {
