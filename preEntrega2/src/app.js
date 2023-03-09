@@ -1,7 +1,7 @@
 import express, { json, urlencoded } from "express";
 import handlebars from "express-handlebars";
 import useRouter from "./routes/index.js"
-import dbConnection from "./config/connectionDB.js";
+import connectionDB from "./config/connectionDB.js";
 import MessageManager from "./dao/classes/MongoDb/MessageManager.js";
 import { Server } from "socket.io";
 import { fileURLToPath } from "url";
@@ -26,7 +26,7 @@ const httpServer = app.listen(PORT, (err) => {
   console.log(`Escuchando en el puerto ${PORT}`);
 });
 
-dbConnection()
+connectionDB()
 
 app.get('/chat', (req, res, next)=>{
   res.render('chat')
