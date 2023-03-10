@@ -2,6 +2,7 @@ import express, { json, urlencoded } from "express";
 import handlebars from "express-handlebars";
 import connectionDB from "./config/connectionDB.js";
 import useRouter from "./routes/index.js"
+import ProductRouter from "./routes/products.js"
 import CartRouter from "./routes/carts.js"
 import MessageManager from "./dao/classes/MongoDb/MessageManager.js";
 
@@ -29,8 +30,10 @@ const httpServer = app.listen(PORT, (err) => {
 });
 
 connectionDB()
-
+app.use(useRouter)
+app.use('/', ProductRouter);
 app.use('/carts', CartRouter)
+/* app.use('/products', ProductRouter) */
 
 
 app.get('/chat', (req, res, next) => {

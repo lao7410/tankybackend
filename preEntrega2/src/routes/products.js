@@ -4,6 +4,16 @@ import { Router } from 'express'
 const router = Router()
 const productManager = new ProductManager();
 
+router.get('/products', async function(req, res, next) {
+    try {
+      const products = await productManager.getProducts();
+      const response = { info: products };
+      res.send(response);
+    } catch (err) {
+      next(err);
+    }
+  })
+
 const queryImport = async (limit) => {
     const array = []
     if (limit === undefined) {
@@ -18,14 +28,10 @@ const queryImport = async (limit) => {
     }
 }
 
+router.get("/", async (req, res) => {
+    res.send({ message: "Welcome to the products page" });
+});
 
-router.get('/', async (req, res) => {
-    const { limit } = req.query
-    let info = await queryImport(limit)
-    res.send({
-        info
-    })
-})
 
 router.get('/:pid', async (req, res) => {
     const { pid } = req.params
@@ -38,7 +44,7 @@ router.post('/', async (req, res) => {
     if (!product.title || !product.description || !product.code || !product.price || !product.stock || !product.category) {
         return res.status(400).send({ message: 'Completar los datos faltantes' })
     }
-    productManager.addProduct(product.title, product.description, product.price, product.thumbnail, product.code, product.stock, product.category)
+    productManager.addProducts(product.title, product.description, product.price, product.thumbnail, product.code, product.stock, product.category)
     res.status(201).send({
         product,
         message: 'usuario creado'
@@ -46,21 +52,18 @@ router.post('/', async (req, res) => {
 
 })
 
-router.put('/:pid', async (req, res) => {
-    const { pid } = req.params
-    let product = req.body
-    let entries = Object.entries(product)
-    entries.forEach(async (keyValue) => {
-        console.log(pid, keyValue);
-        productManager.updateProduct(parseInt(pid), keyValue)
-    })
-
-    res.status(201).send({
-        product,
-        message: 'usuario Modificado'
-    })
-
-})
+router.put('/products', function(req, res) {
+    const products = req.body.products;
+    const promises = [];
+  
+    for (let productId in products) {
+      promises.push(productManager.updateProduct(productId, products[productId]));
+    }
+  
+    Promise.all(promises)
+      .then(() => res.send({ message: "Products updated successfully." }))
+      .catch(() => res.status(500).send({ message: "Error updating products." }));
+  });
 
 router.delete('/:pid', async (req, res) => {
     const { pid } = req.params

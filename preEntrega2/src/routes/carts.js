@@ -21,15 +21,6 @@ router.post('/', async (req, res)=>{
     res.status(201).send('New Cart created')
 })
 
-router.get("/", async (req, res) => {
-    try {
-      const carts = await cartManager.getCart();
-      res.json(carts);
-    } catch (error) {
-      console.log(error);
-    }
-  });
-
 router.get('/:cid', async (req, res)=>{
     //mostrar el array de productos del carrito seleccionado
     const { cid } = req.params
