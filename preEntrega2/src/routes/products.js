@@ -29,7 +29,7 @@ const queryImport = async (limit) => {
 }
 
 router.get("/", async (req, res) => {
-    res.send({ message: "Welcome to the products page" });
+    res.send({ message: "esto es prod" });
 });
 
 
