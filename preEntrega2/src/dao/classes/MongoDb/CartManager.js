@@ -8,21 +8,22 @@ export default class CartManager {
 
     async createCart () {
         try {
-            await CartModel.create({
+            const cart = await CartModel.create({
                 products: []
             })
+            return cart
         } catch (error) {
             console.log(error);
         }
     }
 
-    async getCart (id) {
+    async getCart () {
         try {
-            return await CartModel.findById(id)
+          return await CartModel.find()
         } catch (error) {
-            console.log(error);
+          console.log(error);
         }
-    }
+      }
 
     async addProduct (cid, pid) {
         try {

@@ -1,7 +1,8 @@
 import express, { json, urlencoded } from "express";
 import handlebars from "express-handlebars";
-import useRouter from "./routes/index.js"
 import connectionDB from "./config/connectionDB.js";
+import useRouter from "./routes/index.js"
+import CartRouter from "./routes/carts.js"
 import MessageManager from "./dao/classes/MongoDb/MessageManager.js";
 
 import { Server } from "socket.io";
@@ -23,33 +24,37 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
 const httpServer = app.listen(PORT, (err) => {
-  if (err) console.log(err);
-  console.log(`Escuchando en el puerto ${PORT}`);
+    if (err) console.log(err);
+    console.log(`Escuchando en el puerto ${PORT}`);
 });
 
 connectionDB()
 
-app.get('/chat', (req, res, next)=>{
-  res.render('chat')
+app.use('/carts', CartRouter)
+
+
+app.get('/chat', (req, res, next) => {
+    res.render('chat')
 })
 
 const io = new Server(httpServer)
 
-io.on('connection', socket=>{
-  console.log('Nuevo cliente conectado');
+io.on('connection', socket => {
+    console.log('Nuevo cliente conectado');
 
-  socket.on('message',async data=>{
-      console.log(data);
-      await messageManager.addMessages(data)
-      let messages = await messageManager.getMessages()
-      // console.log(messages);
-      io.emit('messageLog', messages)
-  })
+    socket.on('message', async data => {
+        console.log(data);
+        await messageManager.addMessages(data)
+        let messages = await messageManager.getMessages()
+        // console.log(messages);
+        io.emit('messageLog', messages)
+    })
 
-  socket.on('authenticated', data=>{
-      socket.broadcast.emit('newUserConnect', data)
-  })
+    socket.on('authenticated', data => {
+        socket.broadcast.emit('newUserConnect', data)
+    })
 
 })
-
-app.use(useRouter)
+app.get('*', (req, res) => {
+    res.status(404).send('Not Found');
+});

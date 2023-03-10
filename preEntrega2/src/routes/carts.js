@@ -6,11 +6,29 @@ const router = Router()
 const cartManager = new CartManager();
 
 
+router.get("/", async (req, res) => {
+    try {
+      const carts = await cartManager.getCart();
+      res.json(carts);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
 router.post('/', async (req, res)=>{
     //crear un carrito con id y array de products vacio
     await cartManager.createCart()
     res.status(201).send('New Cart created')
 })
+
+router.get("/", async (req, res) => {
+    try {
+      const carts = await cartManager.getCart();
+      res.json(carts);
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
 router.get('/:cid', async (req, res)=>{
     //mostrar el array de productos del carrito seleccionado
