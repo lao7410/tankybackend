@@ -1,6 +1,6 @@
 import CartModel from "../../models/cart.js"
 
-export default class CartManager { 
+export  class CartManager { 
     #carts
     constructor(){
         this.#carts = []
@@ -43,3 +43,4 @@ export default class CartManager {
         }
     }
 }
+export default CartManager

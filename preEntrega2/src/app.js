@@ -5,15 +5,14 @@ import useRouter from "./routes/index.js"
 import ProductRouter from "./routes/products.js"
 import CartRouter from "./routes/carts.js"
 import MessageManager from "./dao/classes/MongoDb/MessageManager.js";
-
 import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const messageManager = new MessageManager()
-
 const app = express();
 const PORT = 8080;
 app.use(json());
@@ -32,8 +31,8 @@ const httpServer = app.listen(PORT, (err) => {
 connectionDB()
 app.use(useRouter)
 app.use('/', ProductRouter);
-app.use('/carts', CartRouter)
 /* app.use('/products', ProductRouter) */
+app.use('/carts', CartRouter)
 
 
 app.get('/chat', (req, res, next) => {

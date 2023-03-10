@@ -21,12 +21,20 @@ router.post('/', async (req, res)=>{
     res.status(201).send('New Cart created')
 })
 
-router.get('/:cid', async (req, res)=>{
-    //mostrar el array de productos del carrito seleccionado
-    const { cid } = req.params
-    let cart = await cartManager.getCart(cid)
-    res.status(201).send(cart.products)
-})
+router.get('/:cid', async (req, res) => {
+    try {
+      const { cid } = req.params;
+      const cart = await cartManager.getCart(cid);
+  
+      if (!cart) {
+        res.status(404).send('Cart not found');
+      } else {
+        res.json(cart);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
 router.post('/:cid/product/:pid', async (req, res)=>{
     //agregar el producto al carrito seleccionado, es un objeto con el id y cantidad del producto
