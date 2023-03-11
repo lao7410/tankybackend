@@ -6,3 +6,5 @@ const router =Router()
 const productManager = new ProductManager
 const cartManager =new CartManager
 
+router.get('/products'
+
