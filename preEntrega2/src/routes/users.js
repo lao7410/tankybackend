@@ -60,8 +60,8 @@ router.put('/:uid', async (request, response) => {
         return response.status(400).send({ message: 'FALTAN DATOS' })
     }
 
-    // let result = await UsersModel.findByIdAndUpdate({_id: uid}, { nombre }, { new: true })
-    let result = await UsersModel.updateOne({ _id: uid }, { nombre })
+    let result = await UsersModel.findByIdAndUpdate({ _id: uid }, { nombre }, { new: true })
+
 
     response.status(201).send({
         status: 'OK',
