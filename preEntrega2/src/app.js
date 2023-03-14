@@ -4,6 +4,7 @@ import connectionDB from "./config/connectionDB.js";
 import useRouter from "./routes/index.js"
 import ProductRouter from "./routes/products.js"
 import CartRouter from "./routes/carts.js"
+import usersRouter from "./routes/users.js"
 import MessageManager from "./dao/classes/MongoDb/MessageManager.js";
 import { Server } from "socket.io";
 import { fileURLToPath } from "url";
@@ -29,6 +30,7 @@ const httpServer = app.listen(PORT, (err) => {
 });
 
 connectionDB()
+app.use('/api/usuarios',  usersRouter)
 app.use(useRouter)
 app.use('/', ProductRouter);
 /* app.use('/products', ProductRouter) */
