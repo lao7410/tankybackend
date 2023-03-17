@@ -1,7 +1,8 @@
 import { Schema, model } from "mongoose";
-const userCollection = 'usuarios'
 
-const UserSchema = new Schema({
+
+const userCollection = 'Usuarios'
+const userSchema =Schema({
     nombre: {
         type: String,
         required: true
@@ -14,9 +15,14 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         unique: true
+    },
+    password: {
+        type: String,
     }
 })
 
-const UserModel = model(userCollection,UserSchema)
+
+
+const UserModel = model(userCollection, userSchema)
 
 export default UserModel

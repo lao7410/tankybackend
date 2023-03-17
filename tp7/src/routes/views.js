@@ -1,11 +1,11 @@
-/* import { Router } from "express"
-import ProductManager from "../dao/classes/MongoDb/ProductManager.js"
-import CartManager  from "../dao/classes/MongoDb/CartManager.js"
-import viewsRouter  from "Router()"
-import productHandler  from "new ProductManager()"
-import cartHandler  from "new CartManager()"
-import autentication  from '../middlewares/authentication.js'
-import isLogged  from '../middlewares/logg.js'
+const { Router } = require("express");
+const ProductManager = require("../daos/mongo/ProductManager");
+const CartManager = require("../daos/mongo/CartManager");
+const viewsRouter = Router();
+const productHandler = new ProductManager();
+const cartHandler = new CartManager();
+const autentication = require('../middleware/authentication')
+const isLogged = require('../middleware/logg')
 
 viewsRouter.get("/login", isLogged, async (req, res) => {
   res.render("login");
@@ -69,4 +69,4 @@ viewsRouter.get("/carts/:cid", autentication, async (req, res) => {
   }
 });
 
-module.exports = viewsRouter; */
+module.exports = viewsRouter;

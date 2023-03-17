@@ -1,0 +1,17 @@
+{{#if success}}
+<div>
+    <span> {{message}}</span>
+</div>
+<div >
+    <a c href={{url}}>Ir al Login</a>
+</div>
+{{else}}
+
+<div >
+    <span> {{message}}</span>
+</div>
+<div >
+    <a class="btn btn-danger px-13" href={{url}}> Volver al {{case}}</a>
+</div>
+{{/if}}
+
