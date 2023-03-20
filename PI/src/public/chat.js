@@ -1,4 +1,4 @@
-const ioServer = io()
+/* const ioServer = io()
 
 let nombre = document.querySelector('#user')
 let texto = document.querySelector('#mensaje')
@@ -39,4 +39,4 @@ ioServer.on('newMsg', data =>{
                                     </div>
                                    `
     })
-})
+}) */

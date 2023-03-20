@@ -1,6 +1,6 @@
-import { Router, response } from 'express'
+const { Router, response } = require('express')
 // import { Router } from 'express'
-import UsersModel from '../daos/models/userModel.js'
+const UsersModel = require('../models/user.model.js') 
 
 const router = Router()
 
@@ -87,4 +87,6 @@ router.delete('/:uid', async (req, res)=> {
      })
 })
 
-export default router
+module.exports = router
+// export default router
+
