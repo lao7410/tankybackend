@@ -10,7 +10,7 @@ sessionsRouter.post("/login", async (req, res) => {
   const administrator = { email: "estani@estani", password: "estani" }
   const { mail, pass } = req.body;
   const user = await UserModel.findOne({ email: mail });
-
+  
   if (user) {
     const admin = user.email === administrator.email && await bcrypt.compare(pass, administrator.password);
     const passwordMatch = await bcrypt.compare(pass, user.password);
@@ -19,7 +19,7 @@ sessionsRouter.post("/login", async (req, res) => {
         nombre: user.nombre,
         apellido: user.apellido,
         email: user.email,
-        role: admin ? "admin" : "user"
+        role: user.email === administrator.email ? "admin" : "user"
       };
       res.redirect("/products");
     } else {
