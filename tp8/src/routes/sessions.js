@@ -9,17 +9,22 @@ const sessionsRouter = Router();
 sessionsRouter.post("/login", async (req, res) => {
   const administrator = { email: "estani@estani", password: "estani" }
   const { mail, pass } = req.body;
-  const user = await UserModel.findOne({ email: mail, password: pass });
+  const user = await UserModel.findOne({ email: mail });
 
   if (user) {
-    const admin = user.email === administrator.email && user.password === administrator.password
-    req.session.user = {
-      nombre: user.nombre,
-      apellido: user.apellido,
-      email: user.email,
-      role: admin ? "admin" : "user"
-    };
-    res.redirect("/products");
+    const admin = user.email === administrator.email && await bcrypt.compare(pass, administrator.password);
+    const passwordMatch = await bcrypt.compare(pass, user.password);
+    if (passwordMatch) {
+      req.session.user = {
+        nombre: user.nombre,
+        apellido: user.apellido,
+        email: user.email,
+        role: admin ? "admin" : "user"
+      };
+      res.redirect("/products");
+    } else {
+      return res.render("sessionAlert", { success: false, message: "Credenciales incorrectas", case: "Login", url: "/login" });
+    }
   } else {
     return res.render("sessionAlert", { success: false, message: "Credenciales incorrectas", case: "Login", url: "/login" });
   }
