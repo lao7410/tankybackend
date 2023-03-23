@@ -10,6 +10,11 @@ class CartMaganer {
     }
   };
 
+  getCartById = async (id) => {
+    const cart = await this.cartModel.findById(id).populate('productos.product');
+    return cart;
+}
+
   getProductsfromCart = async (cid) => {
     try {
       const carrito = await modeloCarrito.findOne({ _id: cid }).lean();

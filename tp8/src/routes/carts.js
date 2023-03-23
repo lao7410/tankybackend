@@ -40,8 +40,6 @@ routerCarritos.put('/:cid/products/:pid', async(req, res)=>{
     }
 })
 
-
-
 routerCarritos.put('/:cid', async(req, res)=>{
     const {products} = req.body
     const {cid} = req.params

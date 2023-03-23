@@ -1,9 +1,9 @@
 const { Router } = require("express");
 const ProductManager = require("../daos/mongo/ProductManager");
 const CartManager = require("../daos/mongo/CartManager");
+const productHandler = new ProductManager();
 const viewsRouter = Router();
 const isLogged = require('../middleware/logg')
-const productHandler = new ProductManager();
 const cartHandler = new CartManager();
 const autentication = require('../middleware/authentication')
 

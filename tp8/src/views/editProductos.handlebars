@@ -2,8 +2,8 @@
     <h1>BIENVENIDOS</h1>
 </div>
 
-<div class="ml-3">
-    <span      <strong>usuario: </strong> {{nombre}} {{apellido}}
+<div >
+    <span> <strong>usuario: </strong> {{nombre}} {{apellido}}
         {{#if isAdmin}} <span>(Administrador)</span>{{/if}}
     </span>
     <div>
@@ -12,12 +12,10 @@
         </form>
     </div>
 </div>
-
-
-<div style="display: flex">
-    <div id="container" >
-        <table >
-            <thead >
+<div>
+    <div id="container">
+        <table>
+            <thead>
                 <tr>
                     <th>Titulo</th>
                     <th>Descripción</th>
@@ -45,7 +43,7 @@
                     <td class="text-center">{{this.status}}</td>
                     <td class="text-center">{{this._id}}</td>
                     <td> <Button>
-                           </Button> </td>
+                        </Button> </td>
                 </tr>
                 {{/each}}
             </tbody>
@@ -66,53 +64,50 @@
         </tbody>
         </table>
         <div id="alertContainer">
-            <div id="boxAlert" class="alert alert-danger mx-auto" style="width: 400px" role="alert">
-                <span class="mx-auto"> NO PRODUCTS</span>
+            <div id="boxAlert">
+                <span> NO PRODUCTS</span>
             </div>
         </div>
         {{/if}}
     </div>
 
     {{#if isAdmin}}
-    <div id="containerForm" class="mx-auto" style="width: 20%">
+    <div id="containerForm" >
         <form id="form">
-            <div class="form-group">
-                <label class="alert-info" style="padding:3px">Título</label>
-                <input type="text" class="form-control" name="title" placeholder="Ingresar título">
+            <div >
+                <label>Título</label>
+                <input type="text" name="title" placeholder="Ingresar título">
             </div>
-            <div class="form-group">
-                <label class="alert-info" style="padding:3px">Descripción</label>
-                <input type="text" class="form-control" name="description" placeholder="Ingresar descripción">
+            <div >
+                <label>Descripción</label>
+                <input name="description" placeholder="Ingresar descripción">
             </div>
-            <div class="form-group">
-                <label class="alert-info" style="padding:3px">Precio</label>
-                <input type="text" class="form-control" name="price" placeholder="Ingresar precio">
+            <div >
+                <label>Precio</label>
+                <input type="text"  name="price" placeholder="Ingresar precio">
             </div>
-            <div class="form-group">
-                <label class="alert-info" style="padding:3px">Thumbnail</label>
-                <input type="text" class="form-control" name="thumbnail" placeholder="Ingresar Thumbnail">
+            <div >
+                <label>Thumbnail</label>
+                <input type="text"  name="thumbnail" placeholder="Ingresar Thumbnail">
             </div>
-            <div class="form-group">
-                <label class="alert-info" style="padding:3px">Código</label>
-                <input type="text" class="form-control" name="code" placeholder="Ingresar Código">
+            <div >
+                <label>Código</label>
+                <input type="text"  name="code" placeholder="Ingresar Código">
             </div>
-            <div class="form-group">
-                <label class="alert-info" style="padding:3px">Stock</label>
-                <input type="text" class="form-control" name="stock" placeholder="Ingresar Stock">
+            <div >
+                <label>Stock</label>
+                <input type="text"  name="stock" placeholder="Ingresar Stock">
             </div>
-            <div class="form-group">
-                <label class="alert-info" style="padding:3px">Categoría</label>
-                <input type="text" class="form-control" name="category" placeholder="Ingresar Categoría">
+            <div >
+                <label>Categoría</label>
+                <input type="text"  name="category" placeholder="Ingresar Categoría">
             </div>
-            <div class="mx-auto" style="width: 50%">
-                <button type="submit" class=" btn-info">Crear Producto en la Base</button>
+            <div class="mx-auto">
+                <button type="submit" class="btn-info">Crear Producto en la Base</button>
             </div>
         </form>
     </div>
     {{/if}}
+
 </div>
-
-
-
-
 <script src="/aleas/js/index.js"></script>

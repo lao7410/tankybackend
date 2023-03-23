@@ -1,73 +1,35 @@
-<div style="display: flex; margin-top: 30px">
-    <div id="container" class="mx-auto" style="width: 45%">
-    <h2 class="alert-info text-center">CARRITO ID: <span id="idNumber">{{id}}</span></h2>
-        <table class="table table-stripped" id="tableProd">
-            <thead class="table-info">
+<div>
+    <div>
+        <h2>CARRITO ID: <span id="idNumber">{{id}}</span></h2>
+        <table>
+            <thead>
                 <tr>
-                    <th class="text-center" scope="col">Titulo</th>
-                    <th class="text-center" scope="col">Descripción</th>
-                    <th class="text-center" scope="col">Precio</th>
-                    <th class="text-center" scope="col">Código</th>
-                    <th class="text-center" scope="col">Thumbnail</th>
-                    <th class="text-center" scope="col">Stock</th>
-                    <th class="text-center" scope="col">Categoría</th>
-                    <th class="text-center" scope="col">Status</th>
-                    <th class="text-center" scope="col">ID</th>
-                    <th class="text-center" scope="col">Cantidad</th>
+                    <th>Titulo</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Código</th>
+                    <th>Thumbnail</th>
+                    <th>Stock</th>
+                    <th>Categoría</th>
+                    <th>Status</th>
+                    <th>ID</th>
+                    <th>Cantidad</th>
                 </tr>
             </thead>
-            <tbody id="body">
-               {{#if cartExist}}
+            <tbody >
+                {{#if cartExist}}
                 {{#each cartProducts}}
                 <tr>
-                    <td class="text-center">{{this.title}}</td>
-                    <td class="text-center">{{this.description}}</td>
-                    <td class="text-center">{{this.price}}</td>
-                    <td class="text-center">{{this.code}}</td>
-                    <td class="text-center"><img style="width:35px" src={{this.thumbnail}} alt="prd-img"></td>
-                    <td class="text-center">{{this.stock}}</td>
-                    <td class="text-center">{{this.category}}</td>
-                    <td class="text-center">{{this.status}}</td>
-                    <td class="text-center">{{this._id}}</td>
-                    <td class="text-center alert-danger">{{this.quantity}}</td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-         {{else}}
-        </tbody>
-        </table>
-        <div id="alertContainer">
-            <div id="boxAlert" class="alert alert-danger mx-auto" style="width: 400px" role="alert">
-                <span class="mx-auto"> No existen productos agregados a este carrito por el momento.</span>
-            </div>
-        </div>
-         {{/if}}
-    </div>    
-
-
-
-    <div id="container" class="mx-auto" style="width: 25%">
-    <h2 class="alert-info text-center">Catalogo de Productos por agregar</h2>
-        <table class="table table-stripped" id="tableProd">
-            <thead class="table-dark">
-                <tr>
-                    <th class="text-center" scope="col">Titulo</th>
-                    <th class="text-center" scope="col">Precio</th>
-                    <th class="text-center" scope="col">Stock</th>
-                    <th class="text-center" scope="col">Status</th>
-                    <th class="text-center" scope="col">ID</th>
-                </tr>
-            </thead>
-            <tbody id="body">
-                {{#if catalogExists}}
-                {{#each catalogProducts}}
-                <tr>
-                    <td class="text-center">{{this.title}}</td>
-                    <td class="text-center">{{this.price}}</td>
-                    <td class="text-center">{{this.stock}}</td>
-                    <td class="text-center">{{this.status}}</td>
-                    <td class="text-center">{{this._id}}</td>
+                    <td>{{this.title}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.code}}</td>
+                    <td><img src={{this.thumbnail}} alt="prd-img"></td>
+                    <td>{{this.stock}}</td>
+                    <td>{{this.category}}</td>
+                    <td>{{this.status}}</td>
+                    <td>{{this._id}}</td>
+                    <td>{{this.quantity}}</td>
                 </tr>
                 {{/each}}
             </tbody>
@@ -75,12 +37,53 @@
         {{else}}
         </tbody>
         </table>
-        <div id="alertContainer">
-            <div id="boxAlert" class="alert alert-danger mx-auto" style="width: 400px" role="alert">
-                <span class="mx-auto"> No existen productos agregados a este catalogo por el momento.</span>
+        <div >
+            <div>
+                <span>No existen productos.</span>
+            </div>
+
+        </div>
+        {{/if}}
+    </div>
+
+
+
+    <div >
+        <h2>Catalogo de Productos - agrega algo</h2>
+        <table >
+            <thead>
+                <tr>
+                    <th>Titulo</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#if catalogExists}}
+                {{#each catalogProducts}}
+                <tr>
+                    <td>{{this.title}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.stock}}</td>
+                    <td>{{this.status}}</td>
+                    <td>{{this._id}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{else}}
+        </tbody>
+        </table>
+        <div>
+            <div>
+                <span>No existen productos agregados a este catalogo por el momento.</span>
+            </div>
+            <div>
+                <a href="/api/products" class="btn btn-primary">Volver a Productos</a>
             </div>
         </div>
         {{/if}}
     </div>
 </div>
-
