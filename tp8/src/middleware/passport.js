@@ -1,34 +1,65 @@
-const passport = require('passport')
-const { Strategy, ExtractJwt } = require("passport-jwt")
+const passport = require('passport');
+const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
+const LocalStrategy = require('passport-local').Strategy;
+const dotenv = require('dotenv');
+dotenv.config();
 
-const JWTStrategy = Strategy
-const ExtractJWT = ExtractJwt
+const userModel = require('../models/userModel');
 
-const cookieExtractor = req => {
-    let token = null
-    if(req && req.cookies){
-        token = req.cookies['coderCookieToken']
-    }
-    return token
-}
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET,
+};
 
-const objectConfigPassport = {
-    jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-    secretOrKey: 'coderSecret'
-}
+const initializePassport = () => {
+  passport.use(
+    'jwt',
+    new JwtStrategy(jwtOptions, async (jwtPayload, done) => {
+      try {
+        const user = await userModel.findById(jwtPayload.userId);
+        if (!user) return done(null, false, { message: 'Invalid token' });
+        return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
+    })
+  );
 
-const initializePassport = ()=> {
-    passport.use('jwt', new JWTStrategy(objectConfigPassport, async (jwt_payload, done)=>{
+  passport.use(
+    'local',
+    new LocalStrategy(
+      {
+        usernameField: 'email',
+        passwordField: 'password',
+      },
+      async (email, password, done) => {
         try {
-            // validdaciones o traer el usuario de bd
-            // if(!user) return done(null, false, {messages: 'No user found'})
-            return done(null, jwt_payload)
+          const user = await userModel.findOne({ email });
+          if (!user) return done(null, false, { message: 'Incorrect email' });
+          const isMatch = await userModel.isValidPassword(password);
+          if (!isMatch) return done(null, false, { message: 'Incorrect password' });
+          return done(null, user);
         } catch (error) {
-            return done(error)
+          return done(error);
         }
-    })) 
-}
+      }
+    )
+  );
+
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(async (id, done) => {
+    try {
+      const user = await userModel.findById(id);
+      done(null, user);
+    } catch (error) {
+      done(error);
+    }
+  });
+};
 
 module.exports = {
-    initializePassport
-}
+  initializePassport,
+};

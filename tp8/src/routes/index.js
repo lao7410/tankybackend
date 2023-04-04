@@ -3,8 +3,10 @@ const routerProductos = require('./products')
 const routerCarritos = require('./carts')
 const sessionsRouter = require("./sessions");
 const routerViews = require('./views')
+const usersRouter = require('./users');
 
 const router = Router()
+router.use('/api/users', usersRouter);
 router.use("/sessions", sessionsRouter);
 router.use("/api/products", routerProductos)
 router.use("/api/carts", routerCarritos)

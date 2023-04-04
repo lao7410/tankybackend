@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const ProductManager = require("../daos/mongo/ProductManager");
 const CartManager = require("../daos/mongo/CartManager");
+const userManager = require("../daos/mongo/UserManager");
 const productHandler = new ProductManager();
 const viewsRouter = Router();
 const isLogged = require('../middleware/logg')
@@ -68,5 +69,18 @@ viewsRouter.get("/carts/:cid", autentication, async (req, res) => {
     res.send({ error: err.message });
   }
 });
+
+viewsRouter.post("/register", async (req, res) => {
+  try {
+    const { first_name, last_name, email, age, password } = req.body;
+    //Aquí deberías validar que los campos enviados son válidos
+    const user = await userManager.createUser(first_name, last_name, email, age, password);
+    req.session.user = user;
+    res.redirect("/products");
+  } catch (err) {
+    res.send({ error: err.message });
+  }
+});
+
 
 module.exports = viewsRouter;
