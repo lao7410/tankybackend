@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 
-let collection = 'usuarios';
+const collection = 'usuarios';
 
 const userSchema = new Schema({
   first_name: {
