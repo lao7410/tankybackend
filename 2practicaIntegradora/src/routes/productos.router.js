@@ -1,20 +1,24 @@
 const { Router } = require('express')
+const { authToken } = require('../utils/jwt')
+const {
+    getProdutcs,
+    createProdutcs,
+    getProdutc,
+    updateProduct,
+    deleteProduct
+} = require('../controllers/products.controller.js')
 
 const router = Router()
 
 
-// GET api/productos /
-router.get('/', (request, response) =>{
-    
-    response.status(200).send('Productos')
-})
+router
+    .get('/',       getProdutcs)
+    .get('/:id',    getProdutc)
+    .post('/',      createProdutcs)
+    .put('/:id',    updateProduct) 
+    .delete('/:id', deleteProduct)
 
-// GET api/productos /
-router.post('/', (request, response) =>{
-    const {name, price} = request.body
-    response.status(200).send({name, price})
-})
 
 module.exports = router
-// export default router
+
 

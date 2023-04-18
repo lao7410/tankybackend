@@ -1,6 +1,6 @@
 const authorization = (role) => {
     return async (req, res, next) => {
-        // Ya el middleware de autenticación debería cubrir esto, pero mas vale prevenir.
+        // Ya el middleware de autenticación debería cubrir esto
         console.log('role: ', role)
         console.log('user: ', req.user.role)
         if(!req.user) return res.status(401).json({status: 'error', error: 'Unauthorized'})
