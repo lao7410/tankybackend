@@ -1,24 +1,19 @@
-const { Router } = require('express')
-const { authToken } = require('../utils/jwt')
+const { Router } = require("express");
+const { authToken } = require("../utils/jwt");
 const {
-    getProdutcs,
-    createProdutcs,
-    getProdutc,
-    updateProduct,
-    deleteProduct
-} = require('../controllers/products.controller.js')
+  getProdutcs,
+  createProdutcs,
+  getProdutc,
+  updateProduct,
+  deleteProduct,
+} = require("../controllers/products.controller.js");
 
-const router = Router()
+const router = Router();
 
+router.get("/", getProdutcs);
+router.get("/:id", getProdutc);
+router.post("/", authToken, createProdutcs);
+router.put("/:id", authToken, authorization("admin"), updateProduct);
+router.delete("/:id", authToken, authorization("admin"), deleteProduct);
 
-router
-    .get('/',       getProdutcs)
-    .get('/:id',    getProdutc)
-    .post('/',      createProdutcs)
-    .put('/:id',    updateProduct) 
-    .delete('/:id', deleteProduct)
-
-
-module.exports = router
-
-
+module.exports = router;

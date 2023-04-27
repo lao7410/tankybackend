@@ -1,12 +1,11 @@
-const { productService } = require("../repositories")
-
+const { productService } = require("../repositories");
 
 class ProductClass {
     
     getProdutcs = async (req, res) =>{
         const {limit, page, category, sort} = req.query
 
-        const { docs, totalPages,hasPrevPage, hasNextPage, prevPage, nextPage } = await productService.getProducts({limit, page, category, sort})               
+        const { docs, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage } = await productService.getProducts({limit, page, category, sort})               
         
         if(!docs || docs.length === 0){
             return res.status(404).json({
@@ -101,4 +100,4 @@ class ProductClass {
     }
 }
 
-module.exports = new ProductClass()
+module.exports = new ProductClass();

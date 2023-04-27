@@ -1,12 +1,14 @@
-<div>
-    {{#each users}}
-        <p><strong>Nombre:</strong> {{this.first_name}} {{this.last_name}} - <strong>Email:</strong> {{this.email}}</p>
-    {{/each}}
-    {{#if hasPrevPage}}
-            <a href="/api/usuarios?page={{prevPage}}"><button>Anterior</button></a>
-    {{/if}}
-    <label> {{page}} </label>
-    {{#if hasNextPage}}
-            <a href="/api/usuarios?page={{nextPage}}"><button>Siguiente</button></a>
-    {{/if}}
+<h1>Registro</h1>
+<div class="container">
+    <form action="/api/auth/register" method="post" class="form-group w-50">
+        <label class="form-label">Nombre</label>
+        <input   class="form-control" name="first_name">
+        <label class="form-label">Apellido</label>
+        <input type="text" class="form-control" name="last_name">
+        <label class="form-label">Email</label>
+        <input type="text" class="form-control" name="email">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" name="password">
+        <input class="btn btn-outline-dark mt-3 w-100" type="submit">
+    </form>
 </div>

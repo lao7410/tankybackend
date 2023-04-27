@@ -1,32 +1,29 @@
-const UserDTO = require("../dto/user.dto")
+const UserRpositories = require('../repositories/user.repositories');
 
-class UserRpositories { // UserServices
-    constructor(dao){
-        this.dao = dao
-    }
+class UserServices {
+  constructor(dao) {
+    this.repo = new UserRpositories(dao);
+  }
 
-    async getUsers(limit, page){
-        try {
-            return await this.dao.get(limit, page)            
-        } catch (error) {
-            return error
-        }
-    }
+  async getUsers(limit, page) {
+    return await this.repo.getUsers(limit, page);
+  }
 
-    async getUser(){}
-    
-    async createUser(newUser){
-        try {
-            let newUserNormalize = new UserDTO(newUser)
-            let result = await this.dao.create(newUserNormalize)
-            return result            
-        } catch (error) {
-            return error
-        }
-    }
+  async createUser(newUser) {
+    return await this.repo.createUser(newUser);
+  }
 
-    async updateUser(){}    
-    async deleteUser(){}    
+  async getUserById(userId) {
+    return await this.repo.getUserById(userId);
+  }
+
+  async updateUser(userId, updateData) {
+    return await this.repo.updateUser(userId, updateData);
+  }
+
+  async deleteUser(userId) {
+    return await this.repo.deleteUser(userId);
+  }
 }
 
-module.exports = UserRpositories
+module.exports = UserServices;

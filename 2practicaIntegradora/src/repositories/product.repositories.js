@@ -1,51 +1,29 @@
-class ProductRpositories { // UserServices
-    constructor(dao){
-        this.dao = dao
-    }
+const ProductRpositories = require('../repositories/product.repositories');
 
-    async getProducts(objConfig){
-        try {
-            objConfig.limit = objConfig.limit &&  parseInt(objConfig.limit)
-            objConfig.page  = objConfig.page  && parseInt(objConfig.page)
-            objConfig.sort  = objConfig.sort  && parseInt(objConfig.sort)
-            console.log('objConfig: ',objConfig)
-            return await this.dao.get(objConfig)            
-        } catch (error) {
-            return error
-        }
-    }
+class ProductServices {
+  constructor(dao) {
+    this.repo = new ProductRpositories(dao);
+  }
 
-    async getProduct(pid){
-        try {
-            return await this.dao.getById(pid)
-        } catch (error) {
-            return error
-        }
-    }
-    
-    async createProduct(newProduct){
-        try {            
-            return await this.dao.create(newProduct)                         
-        } catch (error) {
-            return error
-        }
-    }
+  async getProducts(objConfig) {
+    return await this.repo.getProducts(objConfig);
+  }
 
-    async updateUser(pid, updateProduct){
-        try {
-            return await this.dao.update(pid, updateProduct)
-        } catch (error) {
-            return error
-        }
-    } 
+  async createProduct(newProduct) {
+    return await this.repo.createProduct(newProduct);
+  }
 
-    async deleteUser(pid){
-        try {
-            return await this.dao.remove(pid)
-        } catch (error) {
-            return error
-        }
-    }    
+  async getProductById(productId) {
+    return await this.repo.getProductById(productId);
+  }
+
+  async updateProduct(productId, updateData) {
+    return await this.repo.updateProduct(productId, updateData);
+  }
+
+  async deleteProduct(productId) {
+    return await this.repo.deleteProduct(productId);
+  }
 }
 
-module.exports = ProductRpositories
+module.exports = ProductServices;

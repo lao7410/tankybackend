@@ -1,5 +1,6 @@
 const MongoStore = require('connect-mongo')
 const mongoose = require('mongoose')
+const {connect} = mongoose
 /* let url = 'mongodb://localhost:27017/comision32270' */
 //let url = "mongodb+srv://tankysoluciones:CoderhouseBackend@cluster0.2zdod6i.mongodb.net/ecommerce?retryWrites=true&w=majority"
 const dotenv = require('dotenv')

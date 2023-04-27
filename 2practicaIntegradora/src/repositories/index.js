@@ -1,13 +1,18 @@
-const { UserDao, ProductDao } = require('../Dao/factory.js')
-const { ProductModel } = require('../Dao/mongo/models/product.model.js')
+const { UserDao, ProductDao, OrderDao } = require("../Dao/factory.js"); // Daos - Manager
 
-const ProductRepositories = require('./product.respositories.js')
-const UserRpositories = require('./user.respositories.js')
+const { ProductModel } = require("../Dao/mongo/models/product.model.js"); //SchemaModel
 
-const userService = new UserRpositories(new UserDao())
-const productService = new ProductRepositories(new ProductDao(ProductModel))
+const ProductRepositories = require("./product.repositories.js"); // Service
+const UserRpositories = require("./user.repositories.js");
+const OrderRepositories = require("./ordersServices.js");
+
+const userService = new UserRpositories(UserDao);
+
+const productService = new ProductRepositories(ProductDao(ProductModel));
+const orderService = new OrderRepositories( OrderDao());
 
 module.exports = {
-    userService,
-    productService
-}
+  userService,
+  productService,
+  orderService,
+};

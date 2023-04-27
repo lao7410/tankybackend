@@ -1,6 +1,6 @@
 initProductsSocket = (io) => {        
     const mensajes = [
-        // {user: 'Fede', message: 'Hola como están'}
+        // {user: 'Estani', message: 'Hola como están'}
     ]
     let connectedClients = []
 

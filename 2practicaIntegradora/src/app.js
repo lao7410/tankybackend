@@ -1,4 +1,18 @@
-const express = require('express')
+const configObject = require("./config/config.js");
+const { httpServer } = require("./server.js");
+
+
+const PORT = configObject.PORT
+
+httpServer.listen(PORT,err =>{
+    if (err)  console.log(err)
+    console.log(`Escuchando en el puerto ${httpServer.address().port }`)
+})
+
+
+
+//ORDENAMOS PARA QUE LOS ARCHIVOS QUEDEN IGUAL QUE EN CLASE Y SEA MAS FACIL SEGUIR
+/* const express = require('express')
 const cookieParser = require('cookie-parser')
 
 const session = require('express-session') 
@@ -96,3 +110,4 @@ io.on('connection', socket => {
         console.log(`Cliente desconectado. Total de clientes conectados: ${connectedClients.length}`)
     })
 })
+ */
