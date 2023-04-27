@@ -1,8 +1,9 @@
-const UserRpositories = require('./user.repositories');
+const UserDaoMongo = require('../Dao/mongo/user.mongo');
+
 
 class UserServices {
   constructor(dao) {
-    this.repo = new UserRpositories(dao);
+    this.repo = new UserDaoMongo();
   }
 
   async getUsers(limit, page) {

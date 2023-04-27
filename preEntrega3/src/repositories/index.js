@@ -1,4 +1,5 @@
 const { UserDao, ProductDao, OrderDao } = require("../Dao/factory.js"); // Daos - Manager
+const { UserDaoMongo, ProductDaoMongo } = require("../Dao/factory.js");
 
 const { ProductModel } = require("../Dao/mongo/models/product.model.js"); //SchemaModel
 
