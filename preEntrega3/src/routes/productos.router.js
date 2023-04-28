@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { authToken } = require("../utils/jwt");
+const { authorization } = require("../middleware/authorization.middleware");
 const {
   getProdutcs,
   createProdutcs,
@@ -12,7 +13,7 @@ const router = Router();
 
 router.get("/", getProdutcs);
 router.get("/:id", getProdutc);
-router.post("/", authToken, createProdutcs);
+router.post("/", authToken, authorization("admin"), createProdutcs);
 router.put("/:id", authToken, authorization("admin"), updateProduct);
 router.delete("/:id", authToken, authorization("admin"), deleteProduct);
 
