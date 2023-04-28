@@ -1,19 +1,13 @@
-const { UserDao, ProductDao, OrderDao } = require("../Dao/factory.js"); // Daos - Manager
-const { UserDaoMongo, ProductDaoMongo } = require("../Dao/factory.js");
+const createDaoFactory = require('../Dao/factory.js');
 
-const { ProductModel } = require("../Dao/mongo/models/product.model.js"); //SchemaModel
+const persistence = process.env.PERSISTENCE || 'MONGO'; // Cambiar valor si es necesario
 
-const ProductRepositories = require("./product.repositories.js"); // Service
-const UserRpositories = require("./user.repositories.js");
-const OrderRepositories = require("./ordersServices.js");
-
-const userService = new UserRpositories(UserDao);
-
-const productService = new ProductRepositories(ProductDao(ProductModel));
-const orderService = new OrderRepositories( OrderDao());
+const { ProductDao, UserDao, CartDao, OrderDao, TicketDao } = createDaoFactory(persistence);
 
 module.exports = {
-  userService,
-  productService,
-  orderService,
+  ProductRepositories: new (require('./product.repositories'))(ProductDao),
+  UserRepositories: new (require('./user.repositories'))(UserDao),
+  CartRepositories: new (require('./cart.repositories'))(CartDao),
+  OrderRepositories: new (require('./ordersServices.js'))(OrderDao),
+  TicketRepositories: new (require('./ticket.repositories'))(TicketDao)
 };

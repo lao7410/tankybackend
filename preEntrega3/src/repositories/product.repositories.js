@@ -1,8 +1,9 @@
-const ProductRpositories = require('../repositories/product.repositories');
+const ProductRepositories = require('../Dao/mongo/product.mongo');
+
 
 class ProductServices {
   constructor(dao) {
-    this.repo = new ProductRpositories(dao);
+    this.repo = new ProductRepositories(dao);
   }
 
   async getProducts(objConfig) {

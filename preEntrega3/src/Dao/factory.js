@@ -1,47 +1,61 @@
-const { persistence, dbConnection } = require('../config/config.js')
+const { dbConnection } = require('../config/config').configObject;
+const { persistence } = require('../config/config.js')
+const ProductModel = require('./mongo/models/product.model');
+const CartDao = require('./mongo/CartDaoMongo');
+const ProductDao = require('./mongo/product.mongo');
 
-let ProductDao
-let UserDao
-let CartDao
-let OrderDao
-let TicketDao
 
-switch (persistence) {
-  case 'MONGO':
-    dbConnection()
+function createDaoFactory(persistence) {
+  let ProductDao;
+  let UserDao;
+  let CartDao;
+  let OrderDao;
+  let TicketDao;
 
-    const ProductDaoMongo = require('./mongo/product.mongo.js')
-    ProductDao = ProductDaoMongo
+  switch (persistence) {
+    case 'MONGO':
+      dbConnection()
 
-    const UserDaoMongo = require('./mongo/user.mongo.js')
-    UserDao = UserDaoMongo
+      const ProductDaoMongo = require('./mongo/product.mongo.js')
+      console.log(ProductDaoMongo);
+      ProductDao = new ProductDaoMongo(ProductModel)
 
-    const CartDaoMongo = require('./mongo/cart.mongo.js')
-    CartDao = CartDaoMongo
+      const UserDaoMongo = require('./mongo/user.mongo.js')
+      UserDao = UserDaoMongo
 
-    const OrderDaoMongo = require('./mongo/order.mongo.js')
-    OrderDao = OrderDaoMongo
+      const CartDaoMongo = require('./mongo/CartDaoMongo')
+      CartDao = CartDaoMongo
 
-    const TicketDaoMongo = require('./mongo/TicketDaoMongo.js')
-    TicketDao = TicketDaoMongo
+      const OrderDaoMongo = require('./mongo/order.mongo.js')
+      OrderDao = OrderDaoMongo
 
-    break;
-  case 'MEMORY':
-    const UserDaoMemory = require('./memory/user.memory.js')
-    UserDao = UserDaoMemory
-    break;
-  case 'ARCHIVO':
+      const TicketDaoMongo = require('./mongo/TicketDaoMongo')
+      TicketDao = TicketDaoMongo
 
-    break;
+      break;
+    case 'MEMORY':
+      const UserDaoMemory = require('./memory/user.memory.js')
+      UserDao = UserDaoMemory
 
-  default:
-    break;
+      const ProductDaoMemory = require('./memory/product.memory.js')
+      ProductDao = new ProductDaoMemory()
+
+      break;
+    case 'ARCHIVO':
+
+      break;
+
+    default:
+      break;
+  }
+
+  return {
+    ProductDao,
+    UserDao,
+    CartDao,
+    OrderDao,
+    TicketDao
+  }
 }
 
-module.exports = {
-  ProductDao,
-  UserDao,
-  CartDao,
-  OrderDao,
-  TicketDao
-}
+module.exports = createDaoFactory;
