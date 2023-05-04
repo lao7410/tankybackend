@@ -6,7 +6,7 @@ const logger = require("morgan");
 const session = require("express-session");
 const cors = require("cors");
 // socket io _______________________________________________________________
-const {configObject} = require("./config/config");
+const { configObject } = require("./config/config");
 // socket io _______________________________________________________________
 // require('dotenv').config()
 
@@ -24,6 +24,9 @@ const twilio = require("twilio");
 const app = express();
 const httpServer = new HttpServer(app);
 const io = new ServerIo(httpServer);
+
+
+const { mockRouter } = require("./mocking");
 
 // oncección con la base de datos mongo __________________________________________________________________
 configObject.dbConnection();
@@ -75,7 +78,7 @@ app.get("/api/mail", async (req, res) => {
       html: `<div>
                     <h1>Bienvenido ${user.nombre} - ${user.apellido}</h1>
                     <img src="cid:logo1"
-                </div>`,
+                    </div>`,
       attachments: [
         {
           filename: "Node.png",
@@ -127,6 +130,23 @@ app.use((err, req, res, next) => {
 
 // socket_______________________________________________________________
 initProductsSocket(io);
+
+app.use('/mock', mockRouter);
+
+app.post('/api/v1/products', (req, res) => {
+  const product = req.body;
+  const requiredFields = ['title', 'price', 'description', 'category', 'image'];
+  const missingFields = requiredFields.filter(field => !(field in product));
+  if (missingFields.length > 0) {
+    const error = { message: 'Missing required fields', fields: missingFields };
+    return res.status(400).json(error);
+  }
+  // guardar el producto en la base de datos
+  res.json(product);
+});
+
+
+
 
 module.exports = {
   httpServer,

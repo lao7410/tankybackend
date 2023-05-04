@@ -1,14 +1,14 @@
-const { userService } = require("../repositories");
+const { userService } = require("../repositories/user.repositories");
 
 class UserController {
   getUsers = async (req, res) => {
     try {
-      const { limit, page } = req.query;
+      const { limit = 10, page = 1 } = req.query; // valores por defecto
       console.log("limit: ", limit);
       console.log("page: ", page);
       const result = await userService.getUsers(
-        parseInt(limit),
-        parseInt(page)
+        parseInt(limit || 10),
+        parseInt(page || 1)
       );
       res.status(200).send({
         status: "success",

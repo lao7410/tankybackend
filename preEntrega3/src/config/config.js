@@ -13,42 +13,6 @@ const enviroment = mode || "development"
 dotenv.config({
     path: enviroment === 'development'? './.env.development' : './.env.production' //verificar .env antes de subir
 })
-//resguardo esta info por la dudas................................................................
-/* const objectConfig = {
-
-    dbConnection: async ()=>{
-        try {
-            // set('stictQuery', set) // sacar leyenda en la consola de deprecado
-            await mongoose.connect(url, {
-                useNewUrlParser: true,   // mongodb mongodb+srv://
-                useUnifiedTopology: true
-            })
-            // conección base de dato
-            console.log('base de dato conectada')
-            
-        } catch (error) {
-            console.log(error)
-        }
-    },
-    session: {
-        store: MongoStore.create({  // new MongoStore === new require('connect-mongo')
-            mongoUrl: url,
-            mongoOptions: {
-                useNewUrlParser: true,   // mongodb mongodb+srv://
-                useUnifiedTopology: true
-            },
-            ttl: 10000000000000
-        }),
-        secret: 'Secreto',
-        resave: false,
-        // saveUnitialized: false
-    }
-}
-
-module.exports = {
-    objectConfig
-} */
-//......................................................................................................
 const url = process.env.MONGO_URL || 'mongodb://localhost:27017/comision32270'
 
 let configObject = {
@@ -87,3 +51,40 @@ module.exports = {
 }
 
 
+
+//resguardo esta info por la dudas................................................................
+/* const objectConfig = {
+
+    dbConnection: async ()=>{
+        try {
+            // set('stictQuery', set) // sacar leyenda en la consola de deprecado
+            await mongoose.connect(url, {
+                useNewUrlParser: true,   // mongodb mongodb+srv://
+                useUnifiedTopology: true
+            })
+            // conección base de dato
+            console.log('base de dato conectada')
+            
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    session: {
+        store: MongoStore.create({  // new MongoStore === new require('connect-mongo')
+            mongoUrl: url,
+            mongoOptions: {
+                useNewUrlParser: true,   // mongodb mongodb+srv://
+                useUnifiedTopology: true
+            },
+            ttl: 10000000000000
+        }),
+        secret: 'Secreto',
+        resave: false,
+        // saveUnitialized: false
+    }
+}
+
+module.exports = {
+    objectConfig
+} */
+//......................................................................................................
