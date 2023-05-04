@@ -28,6 +28,7 @@ const io = new ServerIo(httpServer);
 
 const { mockRouter } = require("./mocking");
 
+
 // oncección con la base de datos mongo __________________________________________________________________
 configObject.dbConnection();
 
@@ -35,6 +36,8 @@ app.use("/virtual", express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+
+app.use(mockRouter);
 app.use(cookieParser());
 
 // passport _______________________
@@ -48,7 +51,8 @@ app.use(logger("dev"));
 app.use(session(configObject.session));
 
 // handlebars_______________________________________________________________
-app.engine("handlebars", handlebars.engine());
+app.engine("handlebars", handlebars());
+
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
@@ -123,28 +127,45 @@ app.get("/api/sms", async (req, res) => {
   }
 });
 
+// socket_______________________________________________________________
+initProductsSocket(io);
+
+/* app.use(mockRouter); */
+
 app.use((err, req, res, next) => {
   console.log(err);
   res.status(500).send("Todo mal");
 });
 
-// socket_______________________________________________________________
-initProductsSocket(io);
-
-app.use('/mock', mockRouter);
-
-app.post('/api/v1/products', (req, res) => {
-  const product = req.body;
-  const requiredFields = ['title', 'price', 'description', 'category', 'image'];
-  const missingFields = requiredFields.filter(field => !(field in product));
-  if (missingFields.length > 0) {
-    const error = { message: 'Missing required fields', fields: missingFields };
-    return res.status(400).json(error);
+app.post('/api/products', async (req, res, next) => {
+  try {
+    const product = generateExampleProduct();
+    const createdProduct = await db.createProduct(product);
+    res.json(createdProduct);
+  } catch (err) {
+    next(err);
   }
-  // guardar el producto en la base de datos
-  res.json(product);
 });
 
+app.post('/api/products/incomplete', async (req, res, next) => {
+  const { description, category, image } = req.body;
+  if (!description || !category || !image) {
+    return next(new Error('Los siguientes campos son necesarios: descripción, categoría, imagen'));
+  }
+  try {
+    const product = {
+      title: 'Producto incompleto',
+      price: 0,
+      description,
+      category,
+      image,
+    };
+    const createdProduct = await db.createProduct(product);
+    res.json(createdProduct);
+  } catch (err) {
+    next(err);
+  }
+});
 
 
 

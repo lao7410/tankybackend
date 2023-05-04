@@ -29,6 +29,13 @@ router.get('/api/v1/mock-products', (req, res) => {
   res.json(mockProducts);
 });
 
+// Endpoint para obtener la lista de productos generados aleatoriamente
+router.get('/mockingproducts', (req, res) => {
+    const products = generateMockProducts(50);
+    res.json(products);
+  });
+  
+
 module.exports = {
   router,
 };
