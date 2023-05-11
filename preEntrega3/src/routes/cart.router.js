@@ -1,4 +1,30 @@
-const { Router } = require('express');
+const { Router } = require('express')
+const { 
+    getCarts, 
+    getCart, 
+    addProductToCart, 
+    createCart, 
+    deleteProductFromCart, 
+    deleteCart, 
+    createTicket 
+} = require('../controllers/carts.controller')
+
+const router = Router()
+
+router
+    .get('/', getCarts)
+    .get('/:cid', getCart)
+    .post('/', createCart)
+    .put('/:cid/products/:pid', addProductToCart)
+    .delete('/:cid/products/:pid', deleteProductFromCart)
+    .delete('/:cid', deleteCart)
+    .post('/:cid/purchase', createTicket)
+
+
+module.exports = router
+
+
+/* const { Router } = require('express');
 const passport = require('passport');
 const { passportCall } = require('../utils/passportCall');
 const { authorization } = require('../middleware/authorization.middleware');
@@ -21,3 +47,4 @@ router
     .delete('/:cid', passportCall('jwt'), authorization('user'), deleteCart);
 
 module.exports = router;
+ */

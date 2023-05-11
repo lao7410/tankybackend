@@ -1,0 +1,62 @@
+# _____________________ Poducts _______________________
+### GET products
+GET http://localhost:8080/api/productos HTTP/1.1
+
+### GET product
+GET http://localhost:8080/api/productos/63ee4d60980c8c9fafad39d6
+
+### POST product
+POST http://localhost:8080/api/productos HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Producto 1",
+    "price": 100,
+    "descripcion": "Descripcion del producto 1",
+    "category": "categoria 1",
+    "stock": 10,
+    "imageUrl": "https://cdn.palbincdn.com/users/31244/images/GORRA-BASICA-JUNIOR-CUSTOMIZASHOPBF10B-COLOR-ROSA-1611838353.jpg",
+    "code": "0006"
+}
+
+
+# ___________________  User __________________________
+### GET users
+GET http://localhost:8080/api/usuarios?limit=10
+
+### GET user
+GET http://localhost:8080/api/usuarios/63ee4d60980c8c9fafad39d6
+
+#### POST user
+
+
+### POST user
+POST http://localhost:8080/api/usuarios
+Content-Type: application/json
+
+{
+    "nombre": "Usuario 1",
+    "apellido": "Usuario 2",
+    "email": "user1@gmail.com"
+}
+
+
+###
+GET http://localhost:8080/users/currentUser
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE2Nzk1OTkyMDd9.vVoR9Rz3Nw49pi231bWqED9YbXeT3_scX9VAkUlOcAU
+
+###
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+    "email":"estani@gmail.com",
+    "password": "estanni"
+}
+
+###
+GET http://localhost:8080/fork
+
+
+###
+GET http://localhost:8080/api/carrito/641219fd4cb810c19f619eb8
