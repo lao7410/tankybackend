@@ -1,4 +1,4 @@
-const ProductManager = require('./ProductManager');
+const ProductManager = require('./productManager');
 
 const productManager = new ProductManager();
 
@@ -6,11 +6,11 @@ console.log(productManager.getProducts()); // []
 
 try {
   productManager.addProduct({
-    title: 'producto prueba',
+    title: 'producto prueba1',
     description: 'Este es un producto prueba',
     price: 200,
     thumbnail: 'Sin imagen',
-    code: 'abc123',
+    code: 'abc1234',
     stock: 25
   });
   console.log(productManager.getProducts()); // [{...}]
@@ -20,11 +20,11 @@ try {
 
 try {
   productManager.addProduct({
-    title: 'Producto de prueba',
+    title: 'Producto de prueba2',
     description: 'Este es un producto de prueba',
     price: 100,
     thumbnail: 'imagen.jpg',
-    code: '123abc',
+    code: '123abc5',
     stock: 10
   });
   console.log(productManager.getProducts()); // [{...}, {...}]
@@ -47,8 +47,8 @@ try {
 }
 
 try {
-  console.log(productManager.getProductById(1));
-  console.log(productManager.getProductById(2));
+
+  console.log(productManager.getProductById(3));
 } catch (error) {
   console.error('Error al obtener el producto:', error.message);
 }

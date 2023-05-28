@@ -19,12 +19,12 @@ class ProductManager {
     const lastProduct = this.products[this.products.length - 1];
     const newId = lastProduct ? lastProduct.id + 1 : 1;
     const newProduct = { id: newId, ...product };
-    
+
     const isCodeDuplicate = this.products.some((p) => p.code === newProduct.code);
     if (isCodeDuplicate) {
       throw new Error('El código del producto ya existe');
     }
-    
+
     this.products.push(newProduct);
     this.saveProductsToFile();
   }
@@ -36,21 +36,25 @@ class ProductManager {
   getProductById(id) {
     const product = this.products.find((p) => p.id === id);
     if (!product) {
-      throw new Error('Not found');
+      throw new Error('Producto no encontrado');
     }
     return product;
   }
 
   updateProduct(id, updatedProduct) {
     const index = this.products.findIndex((p) => p.id === id);
-    if (index === -1) return;
+    if (index === -1) {
+      throw new Error('Producto no encontrado');
+    }
     this.products[index] = { id, ...updatedProduct };
     this.saveProductsToFile();
   }
 
   deleteProduct(id) {
     const index = this.products.findIndex((p) => p.id === id);
-    if (index === -1) return;
+    if (index === -1) {
+      throw new Error('Producto no encontrado');
+    }
     this.products.splice(index, 1);
     this.saveProductsToFile();
   }
