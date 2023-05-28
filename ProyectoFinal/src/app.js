@@ -1,54 +1,39 @@
+const express = require('express');
 const ProductManager = require('./productManager');
 
+const app = express();
 const productManager = new ProductManager();
 
-console.log(productManager.getProducts()); // []
+// Endpoint para obtener todos los productos
+app.get('/products', async (req, res) => {
+  try {
+    const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
+    const products = await productManager.getProducts();
+    
+    if (limit) {
+      const limitedProducts = products.slice(0, limit);
+      res.json(limitedProducts);
+    } else {
+      res.json(products);
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener los productos' });
+  }
+});
 
-try {
-  productManager.addProduct({
-    title: 'producto prueba1',
-    description: 'Este es un producto prueba',
-    price: 200,
-    thumbnail: 'Sin imagen',
-    code: 'abc1234',
-    stock: 25
-  });
-  console.log(productManager.getProducts()); // [{...}]
-} catch (error) {
-  console.error('Error al agregar el producto:', error.message);
-}
+// Endpoint para obtener un producto por su ID
+app.get('/products/:pid', async (req, res) => {
+  try {
+    const productId = parseInt(req.params.pid);
+    const product = await productManager.getProductById(productId);
+    
+    res.json(product);
+  } catch (error) {
+    res.status(404).json({ error: 'Producto no encontrado' });
+  }
+});
 
-try {
-  productManager.addProduct({
-    title: 'Producto de prueba2',
-    description: 'Este es un producto de prueba',
-    price: 100,
-    thumbnail: 'imagen.jpg',
-    code: '123abc5',
-    stock: 10
-  });
-  console.log(productManager.getProducts()); // [{...}, {...}]
-} catch (error) {
-  console.error('Error al agregar el producto:', error.message);
-}
-
-try {
-  productManager.addProduct({
-    title: 'Producto de prueba',
-    description: 'Este es un producto de prueba',
-    price: 100,
-    thumbnail: 'imagen.jpg',
-    code: '123abc',
-    stock: 10
-  });
-  console.log(productManager.getProducts());
-} catch (error) {
-  console.error('Error al agregar el producto:', error.message);
-}
-
-try {
-
-  console.log(productManager.getProductById(3));
-} catch (error) {
-  console.error('Error al obtener el producto:', error.message);
-}
+const port = 8080;
+app.listen(port, () => {
+  console.log(`Servidor escuchando en el puerto ${port}`);
+});
