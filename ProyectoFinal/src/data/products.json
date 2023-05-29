@@ -25,5 +25,19 @@
     "thumbnail": "imagen.jpg",
     "code": "123abc5",
     "stock": 10
+  },
+  {
+    "id": 5,
+    "title": "Nuevo título",
+    "description": "Nueva descripción",
+    "code": "Nuevo código",
+    "price": 50,
+    "status": true,
+    "stock": 50,
+    "category": "Nueva categoría",
+    "thumbnails": [
+      "ruta/imagen1.jpg",
+      "ruta/imagen2.jpg"
+    ]
   }
 ]
