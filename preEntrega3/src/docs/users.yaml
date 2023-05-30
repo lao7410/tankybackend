@@ -1,0 +1,121 @@
+paths: 
+  /api/users/:
+    get:
+      summary: Obtiene todos los usuarios
+      tags: 
+        - Users
+      responses:
+        "200":
+          description: Los usuarios fueron obtenidos correctamente
+          content: 
+            applications/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        "500":
+          description: error interno del server , usalmente generado por una query defctuosa o un fallo con la base de datos. 
+    post:
+      summary: Crea un usuario nuevo
+      tags: 
+        - Users
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema: 
+              $ref: '#/components/requestBodies/updateUser'
+      responses:
+        "201":
+          description: Los usuarios fueron obtenidos correctamente
+               
+
+  /api/users/{uid}:
+    get:
+      summary: Obtiene un usuario en base un uid
+      tags: 
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: El id del usuario que se desea solicitar
+          schema:
+            type: string
+      responses:
+        "200":
+          description: El usuario fué obtenido correctamente
+          content: 
+            applications/json:
+              schema:
+                  $ref: '#/components/schemas/User'
+    put:
+      summary: SE actualiza un usuario en base un uid
+      tags: 
+        - Users
+      parameters:
+      - name: uid
+        in: path
+        required: true
+        description: El id del usuario que se desea actualizar
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/updateUser'
+      responses:
+        "200":
+          description: El usuario fué actualizado correctamente
+          content: 
+            applications/json:
+              schema:
+                  $ref: '#/components/schemas/User'
+        
+
+components: 
+  schemas: 
+    User:
+      type: object
+      properties: 
+        _id:
+          type: string
+          description: Id autogenerado por Mongo.
+        first_name:
+          type: string
+          description: El nombre del usuario.
+        last_name:
+          type: string
+          description: El apellido del usuario.
+        email:
+          type: string
+          description: El email del usuario, este campo es único y no puede repetirse
+        password:
+          type: string
+          description: La contraseña del usuario
+      example: 
+        _id: ObjectId("asdlfkjasdofhbqaeljkasd.fasd45")
+        first_name: Federico
+        last_name: Osandón 
+        email:  f@gmail.com
+        password: $2a$10$1Z.a567asdffas5sa6.$2a$10$1Z.a567asdffas5sa6.
+
+  requestBodies: 
+    updateUser: 
+      type: object
+      properties:           
+        first_name:
+          type: string
+          description: El nombre del usuario.
+        last_name:
+          type: string
+          description: El apellido del usuario.
+        email:
+          type: string
+          description: El email del usuario, este campo es único y no puede repetirse
+        password:
+          type: string
+          description: La contraseña del usuario
+      example:           
