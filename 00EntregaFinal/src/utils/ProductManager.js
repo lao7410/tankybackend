@@ -5,6 +5,14 @@ class ProductManager {
     this.path = filePath;
     this.currentId = 1;
   }
+  
+  generateId() {
+    const products = this.getProductsFromFile();
+    const lastProduct = products[products.length - 1];
+    const newId = lastProduct ? lastProduct.id + 1 : 1;
+    return newId;
+  }
+  
 
   addProduct(product) {
     const products = this.getProductsFromFile();
