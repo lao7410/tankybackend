@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Lista de productos en tiempo real</title>
+</head>
+<body>
+  <h1>Lista de productos en tiempo real</h1>
+  <ul id="product-list">
+    {{#each products}}
+    <li>
+      <strong>Nombre:</strong> {{name}} <br>
+      <strong>Descripción:</strong> {{description}} <br>
+      <strong>Código:</strong> {{code}} <br>
+      <strong>Precio:</strong> {{price}} <br>
+      <strong>Disponible:</strong> {{status}} <br>
+      <strong>Stock:</strong> {{stock}} <br>
+      <strong>Categoría:</strong> {{category}} <br>
+      <strong>Imágenes:</strong>
+      <ul>
+        {{#each thumbnails}}
+        <li>{{this}}</li>
+        {{/each}}
+      </ul>
+    </li>
+    {{/each}}
+  </ul>
+
+  <form id="product-form">
+    <input type="text" id="title-input" placeholder="Título">
+    <input type="text" id="description-input" placeholder="Descripción">
+    <input type="text" id="code-input" placeholder="Código">
+    <input type="number" id="price-input" placeholder="Precio">
+    <input type="checkbox" id="status-input"> Disponible
+    <input type="number" id="stock-input" placeholder="Stock">
+    <input type="text" id="category-input" placeholder="Categoría">
+    <button type="submit">Agregar</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    socket.on('newProduct', (product) => {
+      const productList = document.getElementById('product-list');
+      const listItem = document.createElement('li');
+
+      const html = `
+        <strong>Nombre:</strong> ${product.name} <br>
+        <strong>Descripción:</strong> ${product.description} <br>
+        <strong>Código:</strong> ${product.code} <br>
+        <strong>Precio:</strong> ${product.price} <br>
+        <strong>Disponible:</strong> ${product.status} <br>
+        <strong>Stock:</strong> ${product.stock} <br>
+        <strong>Categoría:</strong> ${product.category} <br>
+        <strong>Imágenes:</strong>
+        <ul>
+          ${product.thumbnails.map(thumbnail => `<li>${thumbnail}</li>`).join('')}
+        </ul>
+      `;
+
+      listItem.innerHTML = html;
+      productList.appendChild(listItem);
+    });
+
+    document.getElementById('product-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const title = document.getElementById('title-input').value;
+      const description = document.getElementById('description-input').value;
+      const code = document.getElementById('code-input').value;
+      const price = document.getElementById('price-input').value;
+      const status = document.getElementById('status-input').checked;
+      const stock = document.getElementById('stock-input').value;
+      const category = document.getElementById('category-input').value;
+
+      const product = {
+        title,
+        description,
+        code,
+        price,
+        status,
+        stock,
+        category
+      };
+
+      socket.emit('createProduct', product);
+
+      // Limpiar los campos del formulario
+      document.getElementById('title-input').value = '';
+      document.getElementById('description-input').value = '';
+      document.getElementById('code-input').value = '';
+      document.getElementById('price-input').value = '';
+      document.getElementById('status-input').checked = false;
+      document.getElementById('stock-input').value = '';
+      document.getElementById('category-input').value = '';
+    });
+  </script>
+</body>
+</html>

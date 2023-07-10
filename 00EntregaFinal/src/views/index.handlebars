@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Lista de productos</title>
+</head>
+<body>
+  <h1>Lista de productos</h1>
+  <ul id="product-list">
+    {{#each products}}
+    <li>{{name}}</li>
+    <li>{{description}}</li>
+    <li>{{code}}</li>
+    <li>{{price}}</li>
+    <li>{{status}}</li>
+    <li>{{stock}}</li>
+    <li>{{category}}</li>
+    <li>{{thumbnails.[0]}}</li>
+    <li>{{thumbnails.[1]}}</li>
+    {{/each}}
+  </ul>
+
+  <script>
+    fetch('/api/products')
+      .then(response => response.json())
+      .then(products => {
+        const productList = document.getElementById('product-list');
+        products.forEach(product => {
+          const listItem = document.createElement('li');
+          listItem.textContent = product.name;
+          productList.appendChild(listItem);
+        });
+      });
+  </script>
+</body>
+</html>

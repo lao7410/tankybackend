@@ -1,83 +1,73 @@
 const express = require("express");
 const router = express.Router();
-const path = require("path");
-const ProductManager = require("../utils/ProductManager");
+const productController = require("../controllers/productController");
 
-const filePath = path.join(__dirname, "..", "data", "products.json");
-const productManager = new ProductManager(filePath);
+module.exports = (io) => {
+  // Ruta: /products
+  router.get("/", productController.getProducts);
 
-// Ruta: /products
-router.get("/", (req, res) => {
-  const limit = req.query.limit;
-  const products = productManager.getProducts();
+  // Ruta: /products/:pid
+  router.get("/:pid", (req, res) => {
+    const productId = parseInt(req.params.pid);
+    const product = productManager.getProductById(productId);
 
-  if (limit) {
-    const limitedProducts = products.slice(0, limit);
-    res.json({ products: limitedProducts });
-  } else {
-    res.json({ products });
-  }
-});
+    if (product) {
+      res.json({ product });
+    } else {
+      res.status(404).json({ message: "Product not found" });
+    }
+  });
 
-// Ruta: /products/:pid
-router.get("/:pid", (req, res) => {
-  const productId = parseInt(req.params.pid);
-  const product = productManager.getProductById(productId);
+  // Ruta: /products
+  router.post("/", (req, res) => {
+    const {
+      title,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnails,
+    } = req.body;
 
-  if (product) {
-    res.json({ product });
-  } else {
-    res.status(404).json({ message: "Product not found" });
-  }
-});
+    const newProduct = {
+      id: productManager.generateId(),
+      title,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnails,
+    };
 
-// Ruta: /products
-router.post("/", (req, res) => {
-  const {
-    title,
-    description,
-    code,
-    price,
-    status,
-    stock,
-    category,
-    thumbnails,
-  } = req.body;
+    productManager.addProduct(newProduct);
+    io.emit("newProduct", newProduct);
 
-  const newProduct = {
-    id: productManager.generateId(), // Generar un nuevo ID para el producto
-    title,
-    description,
-    code,
-    price,
-    status,
-    stock,
-    category,
-    thumbnails,
-  };
+    res.json({ message: "Product created successfully", product: newProduct });
+  });
 
-  productManager.addProduct(newProduct);
+  // Ruta: /products/:pid
+  router.put("/:pid", (req, res) => {
+    const productId = parseInt(req.params.pid);
+    const updatedProduct = req.body;
 
-  res.json({ message: "Product created successfully", product: newProduct });
-});
+    productManager.updateProduct(productId, updatedProduct);
 
-// Ruta: /products/:pid
-router.put("/:pid", (req, res) => {
-  const productId = parseInt(req.params.pid);
-  const updatedProduct = req.body;
+    res.json({ message: "Product updated successfully" });
+  });
 
-  productManager.updateProduct(productId, updatedProduct);
+  // Ruta: /products/:pid
+  router.delete("/:pid", (req, res) => {
+    const productId = parseInt(req.params.pid);
 
-  res.json({ message: "Product updated successfully" });
-});
+    productManager.deleteProduct(productId);
+    io.emit("productDeleted", productId);
 
-// Ruta: /products/:pid
-router.delete("/:pid", (req, res) => {
-  const productId = parseInt(req.params.pid);
+    res.json({ message: "Product deleted successfully" });
+  });
 
-  productManager.deleteProduct(productId);
-
-  res.json({ message: "Product deleted successfully" });
-});
-
-module.exports = router;
+  return router;
+};

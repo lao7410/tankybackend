@@ -12,5 +12,34 @@
       "ruta1.jpg",
       "ruta2.jpg"
     ]
+  },
+
+  {
+    "id": 2,
+    "title": "Nuevo producto 2",
+    "description": "Descripción del producto",
+    "code": "ABC123",
+    "price": 100.99,
+    "status": true,
+    "stock": 5,
+    "category": "Electrónica",
+    "thumbnails": [
+      "ruta1.jpg",
+      "ruta2.jpg"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Nuevo producto3",
+    "description": "Descripción del producto",
+    "code": "ABC123",
+    "price": 101.99,
+    "status": true,
+    "stock": 5,
+    "category": "Electrónica",
+    "thumbnails": [
+      "ruta1.jpg",
+      "ruta2.jpg"
+    ]
   }
 ]
